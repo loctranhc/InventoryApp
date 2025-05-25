@@ -1,9 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using InventoryApp.Models;
-using System.Xml.Linq;
-
-namespace InventoryApp
+﻿namespace InventoryApp
 {
     public partial class ProductForm : Form
     {

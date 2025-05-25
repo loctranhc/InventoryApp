@@ -1,58 +1,70 @@
-﻿using System;
-using System.Windows.Forms;
-using InventoryApp.Data;
-using InventoryApp.Models; // Đảm bảo namespace đúng với project của bạn
+﻿using MigrateDatabase;
+using MigrateDatabase.Models;
 
 namespace InventoryApp
 {
     public partial class CustomerForm : Form
     {
-        private readonly InventoryDbContext _context;
+        private readonly InventoryAppDbContext _context;
         private readonly Customer _editingCustomer;
 
-        public CustomerForm(InventoryDbContext context, Customer customer = null)
+        public CustomerForm(InventoryAppDbContext appDbContext, Customer customer = null)
         {
             InitializeComponent();
-            _context = context;
+            _context = appDbContext;
             _editingCustomer = customer;
 
-            if (_editingCustomer != null)
+            cbxGioiTinh.Items.Add("Nam");
+            cbxGioiTinh.Items.Add("Nữ");
+            cbxGioiTinh.SelectedIndex = 0;
+
+            if(customer is not null)
             {
-                this.Text = "Cập nhật khách hàng";
-                txtName.Text = _editingCustomer.CustomerName;
-                txtPhone.Text = _editingCustomer.Phone;
-                txtAddress.Text = _editingCustomer.Address;
-            }
-            else
-            {
-                this.Text = "Thêm khách hàng";
+                txtName.Text = customer.HoTen;
+                txtAddress.Text = customer.DiaChi;
+                txtPhone.Text = customer.Phone;
+                cbxGioiTinh.Text = customer.GioiTinh;
             }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtName.Text))
+            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPhone.Text) || string.IsNullOrWhiteSpace(txtAddress.Text))
             {
-                MessageBox.Show("Vui lòng nhập tên khách hàng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (_editingCustomer == null)
             {
+                var exits = _context.Customers.FirstOrDefault(x => txtPhone.Text == x.Phone);
+                if(exits != null)
+                {
+                    MessageBox.Show("Số điện thoại đã được sử dụng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }       
+
                 var customer = new Customer
                 {
-                    CustomerName = txtName.Text.Trim(),
+                    CustomerNo = string.Empty,
+                    HoTen = txtName.Text.Trim(),
                     Phone = txtPhone.Text.Trim(),
-                    Address = txtAddress.Text.Trim()
+                    DiaChi = txtAddress.Text.Trim(),
+                    GioiTinh = cbxGioiTinh.Text
                 };
 
                 _context.Customers.Add(customer);
+                _context.SaveChanges();
+
+                var newCustomer = _context.Customers.FirstOrDefault(x => customer.Id == x.Id);
+                newCustomer.CustomerNo = $"KH-{newCustomer.Id.ToString()}";
             }
             else
             {
-                _editingCustomer.CustomerName = txtName.Text.Trim();
-                _editingCustomer.Phone = txtPhone.Text.Trim();
-                _editingCustomer.Address = txtAddress.Text.Trim();
+                var editCustomer = _context.Customers.FirstOrDefault(x => _editingCustomer.Id == x.Id);
+                editCustomer.HoTen = txtName.Text.Trim();
+                editCustomer.Phone = txtPhone.Text.Trim();
+                editCustomer.DiaChi = txtAddress.Text.Trim();
             }
 
             _context.SaveChanges();

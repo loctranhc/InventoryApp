@@ -5,7 +5,6 @@
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.DataGridView dgvEmployees;
         private System.Windows.Forms.Button btnAdd, btnEdit, btnDelete;
-        private System.Windows.Forms.FlowLayoutPanel panelButtons;
 
         protected override void Dispose(bool disposing)
         {
@@ -15,55 +14,116 @@
 
         private void InitializeComponent()
         {
-            this.dgvEmployees = new System.Windows.Forms.DataGridView();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.btnEdit = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.panelButtons = new System.Windows.Forms.FlowLayoutPanel();
-
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEmployees)).BeginInit();
-            this.SuspendLayout();
-
-            // panelButtons
-            this.panelButtons.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelButtons.Height = 40;
-            this.panelButtons.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
-            this.panelButtons.Padding = new System.Windows.Forms.Padding(10, 5, 0, 0);
-
-            // btnAdd
-            this.btnAdd.Text = "Thêm";
-            this.btnAdd.Width = 80;
-            this.btnAdd.Click += btnAdd_Click;
-
-            // btnEdit
-            this.btnEdit.Text = "Sửa";
-            this.btnEdit.Width = 80;
-            this.btnEdit.Click += btnEdit_Click;
-
-            // btnDelete
-            this.btnDelete.Text = "Xóa";
-            this.btnDelete.Width = 80;
-            this.btnDelete.Click += btnDelete_Click;
-
-            // panelButtons Add
-            this.panelButtons.Controls.Add(this.btnAdd);
-            this.panelButtons.Controls.Add(this.btnEdit);
-            this.panelButtons.Controls.Add(this.btnDelete);
-
+            dgvEmployees = new DataGridView();
+            btnAdd = new Button();
+            btnEdit = new Button();
+            btnDelete = new Button();
+            txtTimKiem = new TextBox();
+            label1 = new Label();
+            btnTimKiem = new Button();
+            ((System.ComponentModel.ISupportInitialize)dgvEmployees).BeginInit();
+            SuspendLayout();
+            // 
             // dgvEmployees
-            this.dgvEmployees.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvEmployees.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvEmployees.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvEmployees.MultiSelect = false;
-            this.dgvEmployees.ReadOnly = true;
-
+            // 
+            dgvEmployees.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvEmployees.Location = new Point(13, 132);
+            dgvEmployees.MultiSelect = false;
+            dgvEmployees.Name = "dgvEmployees";
+            dgvEmployees.ReadOnly = true;
+            dgvEmployees.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvEmployees.Size = new Size(833, 410);
+            dgvEmployees.TabIndex = 0;
+            // 
+            // btnAdd
+            // 
+            btnAdd.BackColor = Color.DarkGreen;
+            btnAdd.Font = new Font("Segoe UI", 9.75F);
+            btnAdd.ForeColor = Color.White;
+            btnAdd.Location = new Point(13, 92);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(80, 34);
+            btnAdd.TabIndex = 3;
+            btnAdd.Text = "Thêm";
+            btnAdd.UseVisualStyleBackColor = false;
+            // 
+            // btnEdit
+            // 
+            btnEdit.BackColor = SystemColors.HotTrack;
+            btnEdit.Font = new Font("Segoe UI", 9.75F);
+            btnEdit.ForeColor = Color.White;
+            btnEdit.Location = new Point(99, 92);
+            btnEdit.Name = "btnEdit";
+            btnEdit.Size = new Size(80, 34);
+            btnEdit.TabIndex = 4;
+            btnEdit.Text = "Sửa";
+            btnEdit.UseVisualStyleBackColor = false;
+            // 
+            // btnDelete
+            // 
+            btnDelete.BackColor = Color.Red;
+            btnDelete.Font = new Font("Segoe UI", 9.75F);
+            btnDelete.ForeColor = Color.White;
+            btnDelete.Location = new Point(185, 92);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(80, 34);
+            btnDelete.TabIndex = 5;
+            btnDelete.Text = "Xóa";
+            btnDelete.UseVisualStyleBackColor = false;
+            // 
+            // txtTimKiem
+            // 
+            txtTimKiem.AutoCompleteMode = AutoCompleteMode.Suggest;
+            txtTimKiem.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            txtTimKiem.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtTimKiem.Location = new Point(13, 44);
+            txtTimKiem.Name = "txtTimKiem";
+            txtTimKiem.Size = new Size(295, 29);
+            txtTimKiem.TabIndex = 6;
+            txtTimKiem.TextChanged += txtTimKiem_TextChanged;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(13, 16);
+            label1.Name = "label1";
+            label1.Size = new Size(188, 25);
+            label1.TabIndex = 7;
+            label1.Text = "Tìm Kiếm Nhân Viên";
+            // 
+            // btnTimKiem
+            // 
+            btnTimKiem.BackColor = Color.OrangeRed;
+            btnTimKiem.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnTimKiem.ForeColor = Color.White;
+            btnTimKiem.Location = new Point(314, 45);
+            btnTimKiem.Name = "btnTimKiem";
+            btnTimKiem.Size = new Size(80, 29);
+            btnTimKiem.TabIndex = 8;
+            btnTimKiem.Text = "Tìm";
+            btnTimKiem.UseVisualStyleBackColor = false;
+            btnTimKiem.Click += btnTimKiem_Click;
+            // 
             // EmployeeControl
-            this.Controls.Add(this.dgvEmployees);
-            this.Controls.Add(this.panelButtons);
-            this.Name = "EmployeeControl";
-            this.Size = new System.Drawing.Size(600, 400);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEmployees)).EndInit();
-            this.ResumeLayout(false);
+            // 
+            BackgroundImage = Properties.Resources.bg;
+            BackgroundImageLayout = ImageLayout.Stretch;
+            Controls.Add(btnTimKiem);
+            Controls.Add(label1);
+            Controls.Add(txtTimKiem);
+            Controls.Add(btnAdd);
+            Controls.Add(btnEdit);
+            Controls.Add(btnDelete);
+            Controls.Add(dgvEmployees);
+            Name = "EmployeeControl";
+            Size = new Size(860, 557);
+            ((System.ComponentModel.ISupportInitialize)dgvEmployees).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
+        private TextBox txtTimKiem;
+        private Label label1;
+        private Button btnTimKiem;
     }
 }

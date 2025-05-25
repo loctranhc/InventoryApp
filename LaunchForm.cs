@@ -1,37 +1,31 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using MigrateDatabase;
 
 namespace InventoryApp
 {
-    public partial class LaunchForm : Form
+    public partial class LaunchForm : BaseForm
     {
-        public LaunchForm()
+        private readonly InventoryAppDbContext _dbContext;
+        public LaunchForm(InventoryAppDbContext dbContext)
         {
             InitializeComponent();
+            _dbContext = dbContext;
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private void btnDangNhap_Click(object sender, EventArgs e)
         {
-            var loginForm = new LoginForm();
-            if (loginForm.ShowDialog() == DialogResult.OK)
-            {
-                this.Hide();
-                var mainForm = new MainForm();
-                mainForm.FormClosed += (s, args) => this.Close();
-                mainForm.Show();
-            }
+            var loginForm = new LoginForm(_dbContext, this);
+            loginForm.Show();
         }
 
-        private void btnRegister_Click(object sender, EventArgs e)
+        private void btnDangKy_Click(object sender, EventArgs e)
         {
-            var registerForm = new RegisterForm();
-            if (registerForm.ShowDialog() == DialogResult.OK)
-            {
-                this.Hide();
-                var mainForm = new MainForm();
-                mainForm.FormClosed += (s, args) => this.Close();
-                mainForm.Show();
-            }
+            var registerForm = new RegisterForm(_dbContext);
+            registerForm.Show();
+        }
+
+        private void cuiButton1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

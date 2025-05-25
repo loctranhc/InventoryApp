@@ -3,14 +3,6 @@
     partial class RegisterForm
     {
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.TextBox txtUsername;
-        private System.Windows.Forms.TextBox txtPassword;
-        private System.Windows.Forms.TextBox txtConfirm;
-        private System.Windows.Forms.Button btnRegister;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Label lblUsername;
-        private System.Windows.Forms.Label lblPassword;
-        private System.Windows.Forms.Label lblConfirm;
 
         protected override void Dispose(bool disposing)
         {
@@ -20,89 +12,201 @@
 
         private void InitializeComponent()
         {
-            this.txtUsername = new System.Windows.Forms.TextBox();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.txtConfirm = new System.Windows.Forms.TextBox();
-            this.btnRegister = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.lblUsername = new System.Windows.Forms.Label();
-            this.lblPassword = new System.Windows.Forms.Label();
-            this.lblConfirm = new System.Windows.Forms.Label();
-            this.SuspendLayout();
-
+            btnDangKy = new CuoreUI.Controls.cuiButton();
+            txtTenDangNhap = new CuoreUI.Controls.cuiTextBox();
+            txtMatKhau = new CuoreUI.Controls.cuiTextBox();
+            txtDiaChi = new CuoreUI.Controls.cuiTextBox();
+            txtSoDienThoai = new CuoreUI.Controls.cuiTextBox();
+            label1 = new Label();
+            SuspendLayout();
             // 
-            // lblUsername
+            // btnDangKy
             // 
-            this.lblUsername.Text = "Tên đăng nhập:";
-            this.lblUsername.Location = new System.Drawing.Point(30, 30);
-            this.lblUsername.AutoSize = true;
-
+            btnDangKy.CheckButton = false;
+            btnDangKy.Checked = false;
+            btnDangKy.CheckedBackground = Color.FromArgb(255, 106, 0);
+            btnDangKy.CheckedForeColor = Color.White;
+            btnDangKy.CheckedImageTint = Color.White;
+            btnDangKy.CheckedOutline = Color.FromArgb(255, 106, 0);
+            btnDangKy.Content = "ĐĂNG KÝ TÀI KHOẢN";
+            btnDangKy.DialogResult = DialogResult.None;
+            btnDangKy.Font = new Font("Microsoft Sans Serif", 9.75F);
+            btnDangKy.ForeColor = Color.White;
+            btnDangKy.HoverBackground = Color.White;
+            btnDangKy.HoveredImageTint = Color.White;
+            btnDangKy.HoverForeColor = Color.Black;
+            btnDangKy.HoverOutline = Color.FromArgb(32, 128, 128, 128);
+            btnDangKy.Image = null;
+            btnDangKy.ImageAutoCenter = true;
+            btnDangKy.ImageExpand = new Point(0, 0);
+            btnDangKy.ImageOffset = new Point(0, 0);
+            btnDangKy.Location = new Point(150, 390);
+            btnDangKy.Name = "btnDangKy";
+            btnDangKy.NormalBackground = Color.OrangeRed;
+            btnDangKy.NormalForeColor = Color.White;
+            btnDangKy.NormalImageTint = Color.White;
+            btnDangKy.NormalOutline = Color.FromArgb(64, 128, 128, 128);
+            btnDangKy.OutlineThickness = 1F;
+            btnDangKy.PressedBackground = Color.WhiteSmoke;
+            btnDangKy.PressedForeColor = Color.FromArgb(32, 32, 32);
+            btnDangKy.PressedImageTint = Color.White;
+            btnDangKy.PressedOutline = Color.FromArgb(64, 128, 128, 128);
+            btnDangKy.Rounding = new Padding(8);
+            btnDangKy.Size = new Size(206, 45);
+            btnDangKy.TabIndex = 8;
+            btnDangKy.TextAlignment = StringAlignment.Center;
+            btnDangKy.TextOffset = new Point(0, 0);
+            btnDangKy.Click += btnDangKy_Click;
             // 
-            // txtUsername
+            // txtTenDangNhap
             // 
-            this.txtUsername.Location = new System.Drawing.Point(150, 27);
-            this.txtUsername.Width = 180;
-
+            txtTenDangNhap.BackgroundColor = Color.White;
+            txtTenDangNhap.BorderColor = Color.FromArgb(128, 128, 128, 128);
+            txtTenDangNhap.Content = "";
+            txtTenDangNhap.FocusBackgroundColor = Color.White;
+            txtTenDangNhap.FocusBorderColor = Color.FromArgb(255, 106, 0);
+            txtTenDangNhap.FocusImageTint = Color.White;
+            txtTenDangNhap.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtTenDangNhap.ForeColor = Color.Gray;
+            txtTenDangNhap.Image = null;
+            txtTenDangNhap.ImageExpand = new Point(0, 0);
+            txtTenDangNhap.ImageOffset = new Point(0, 0);
+            txtTenDangNhap.Location = new Point(80, 142);
+            txtTenDangNhap.Margin = new Padding(4);
+            txtTenDangNhap.Multiline = false;
+            txtTenDangNhap.Name = "txtTenDangNhap";
+            txtTenDangNhap.NormalImageTint = Color.White;
+            txtTenDangNhap.Padding = new Padding(15, 15, 15, 0);
+            txtTenDangNhap.PasswordChar = false;
+            txtTenDangNhap.PlaceholderColor = SystemColors.WindowText;
+            txtTenDangNhap.PlaceholderText = "Tên Đăng Nhập";
+            txtTenDangNhap.Rounding = new Padding(8);
+            txtTenDangNhap.Size = new Size(350, 45);
+            txtTenDangNhap.TabIndex = 9;
+            txtTenDangNhap.TextOffset = new Size(0, 0);
+            txtTenDangNhap.UnderlinedStyle = true;
+            txtTenDangNhap.ContentChanged += txtTenDangNhap_ContentChanged;
             // 
-            // lblPassword
+            // txtMatKhau
             // 
-            this.lblPassword.Text = "Mật khẩu:";
-            this.lblPassword.Location = new System.Drawing.Point(30, 70);
-            this.lblPassword.AutoSize = true;
-
+            txtMatKhau.BackgroundColor = Color.White;
+            txtMatKhau.BorderColor = Color.FromArgb(128, 128, 128, 128);
+            txtMatKhau.Content = "";
+            txtMatKhau.FocusBackgroundColor = Color.White;
+            txtMatKhau.FocusBorderColor = Color.FromArgb(255, 106, 0);
+            txtMatKhau.FocusImageTint = Color.White;
+            txtMatKhau.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtMatKhau.ForeColor = Color.Gray;
+            txtMatKhau.Image = null;
+            txtMatKhau.ImageExpand = new Point(0, 0);
+            txtMatKhau.ImageOffset = new Point(0, 0);
+            txtMatKhau.Location = new Point(80, 195);
+            txtMatKhau.Margin = new Padding(4);
+            txtMatKhau.Multiline = false;
+            txtMatKhau.Name = "txtMatKhau";
+            txtMatKhau.NormalImageTint = Color.White;
+            txtMatKhau.Padding = new Padding(15, 15, 15, 0);
+            txtMatKhau.PasswordChar = true;
+            txtMatKhau.PlaceholderColor = SystemColors.WindowText;
+            txtMatKhau.PlaceholderText = "Mật Khẩu";
+            txtMatKhau.Rounding = new Padding(8);
+            txtMatKhau.Size = new Size(350, 45);
+            txtMatKhau.TabIndex = 10;
+            txtMatKhau.TextOffset = new Size(0, 0);
+            txtMatKhau.UnderlinedStyle = true;
             // 
-            // txtPassword
+            // txtDiaChi
             // 
-            this.txtPassword.Location = new System.Drawing.Point(150, 67);
-            this.txtPassword.Width = 180;
-            this.txtPassword.PasswordChar = '*';
-
+            txtDiaChi.BackgroundColor = Color.White;
+            txtDiaChi.BorderColor = Color.FromArgb(128, 128, 128, 128);
+            txtDiaChi.Content = "";
+            txtDiaChi.FocusBackgroundColor = Color.White;
+            txtDiaChi.FocusBorderColor = Color.FromArgb(255, 106, 0);
+            txtDiaChi.FocusImageTint = Color.White;
+            txtDiaChi.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtDiaChi.ForeColor = Color.Gray;
+            txtDiaChi.Image = null;
+            txtDiaChi.ImageExpand = new Point(0, 0);
+            txtDiaChi.ImageOffset = new Point(0, 0);
+            txtDiaChi.Location = new Point(80, 248);
+            txtDiaChi.Margin = new Padding(4);
+            txtDiaChi.Multiline = false;
+            txtDiaChi.Name = "txtDiaChi";
+            txtDiaChi.NormalImageTint = Color.White;
+            txtDiaChi.Padding = new Padding(15, 15, 15, 0);
+            txtDiaChi.PasswordChar = false;
+            txtDiaChi.PlaceholderColor = SystemColors.WindowText;
+            txtDiaChi.PlaceholderText = "Địa Chỉ";
+            txtDiaChi.Rounding = new Padding(8);
+            txtDiaChi.Size = new Size(350, 45);
+            txtDiaChi.TabIndex = 11;
+            txtDiaChi.TextOffset = new Size(0, 0);
+            txtDiaChi.UnderlinedStyle = true;
             // 
-            // lblConfirm
+            // txtSoDienThoai
             // 
-            this.lblConfirm.Text = "Xác nhận mật khẩu:";
-            this.lblConfirm.Location = new System.Drawing.Point(30, 110);
-            this.lblConfirm.AutoSize = true;
-
+            txtSoDienThoai.BackgroundColor = Color.White;
+            txtSoDienThoai.BorderColor = Color.FromArgb(128, 128, 128, 128);
+            txtSoDienThoai.Content = "";
+            txtSoDienThoai.FocusBackgroundColor = Color.White;
+            txtSoDienThoai.FocusBorderColor = Color.FromArgb(255, 106, 0);
+            txtSoDienThoai.FocusImageTint = Color.White;
+            txtSoDienThoai.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtSoDienThoai.ForeColor = Color.Gray;
+            txtSoDienThoai.Image = null;
+            txtSoDienThoai.ImageExpand = new Point(0, 0);
+            txtSoDienThoai.ImageOffset = new Point(0, 0);
+            txtSoDienThoai.Location = new Point(80, 301);
+            txtSoDienThoai.Margin = new Padding(4);
+            txtSoDienThoai.Multiline = false;
+            txtSoDienThoai.Name = "txtSoDienThoai";
+            txtSoDienThoai.NormalImageTint = Color.White;
+            txtSoDienThoai.Padding = new Padding(15, 15, 15, 0);
+            txtSoDienThoai.PasswordChar = false;
+            txtSoDienThoai.PlaceholderColor = SystemColors.WindowText;
+            txtSoDienThoai.PlaceholderText = "Số Điện Thoại";
+            txtSoDienThoai.Rounding = new Padding(8);
+            txtSoDienThoai.Size = new Size(350, 45);
+            txtSoDienThoai.TabIndex = 12;
+            txtSoDienThoai.TextOffset = new Size(0, 0);
+            txtSoDienThoai.UnderlinedStyle = true;
             // 
-            // txtConfirm
+            // label1
             // 
-            this.txtConfirm.Location = new System.Drawing.Point(150, 107);
-            this.txtConfirm.Width = 180;
-            this.txtConfirm.PasswordChar = '*';
-
-            // 
-            // btnRegister
-            // 
-            this.btnRegister.Text = "Đăng ký";
-            this.btnRegister.Location = new System.Drawing.Point(80, 160);
-            this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
-
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Text = "Hủy";
-            this.btnCancel.Location = new System.Drawing.Point(180, 160);
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-
+            label1.AutoSize = true;
+            label1.BackColor = Color.Transparent;
+            label1.Font = new Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(103, 66);
+            label1.Name = "label1";
+            label1.Size = new Size(305, 40);
+            label1.TabIndex = 13;
+            label1.Text = "ĐĂNG KÝ HỆ THỐNG";
             // 
             // RegisterForm
             // 
-            this.ClientSize = new System.Drawing.Size(380, 230);
-            this.Controls.AddRange(new System.Windows.Forms.Control[] {
-                lblUsername, txtUsername,
-                lblPassword, txtPassword,
-                lblConfirm, txtConfirm,
-                btnRegister, btnCancel
-            });
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "RegisterForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Đăng ký tài khoản";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            BackgroundImage = Properties.Resources.bg;
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(510, 501);
+            Controls.Add(label1);
+            Controls.Add(txtSoDienThoai);
+            Controls.Add(txtDiaChi);
+            Controls.Add(txtMatKhau);
+            Controls.Add(txtTenDangNhap);
+            Controls.Add(btnDangKy);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "RegisterForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Đăng ký tài khoản";
+            ResumeLayout(false);
+            PerformLayout();
         }
+        private CuoreUI.Controls.cuiButton btnDangKy;
+        private CuoreUI.Controls.cuiTextBox txtTenDangNhap;
+        private CuoreUI.Controls.cuiTextBox txtMatKhau;
+        private CuoreUI.Controls.cuiTextBox txtDiaChi;
+        private CuoreUI.Controls.cuiTextBox txtSoDienThoai;
+        private Label label1;
     }
 }
