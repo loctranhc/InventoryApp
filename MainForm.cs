@@ -29,6 +29,7 @@ namespace InventoryApp
             //btnInvoices.Click += (s, e) => LoadControl(new InvoiceControl());
             btnCustomers.Click += (s, e) => LoadControl(new CustomerControl(dbContext));
             btnUsers.Click += (s, e) => LoadControl(new EmployeeControl(dbContext));
+            btnToaThuocMau.Click += (s, e) => LoadControl(new ToaThuocMauControl(dbContext));
             //btnReports.Click += (s, e) => LoadControl(new ReportControl());
             //btnBackup.Click += (s, e) => LoadControl(new BackupControl());
         }
@@ -43,12 +44,12 @@ namespace InventoryApp
         private void InitMenuButtons()
         {
             Button[] buttons = {
-                btnDashboard, btnPOS, btnPrescription, btnCategory, btnProducts, btnMedicine, btnInventory, btnInvoices,
+                btnDashboard, btnPOS, btnPrescription, btnToaThuocMau, btnCategory, btnProducts, btnMedicine, btnInventory, btnInvoices,
                 btnCustomers, btnUsers, btnReports
             };
 
             string[] texts = {
-                "DASHBOARD", "BÁN HÀNG", "TOA THUỐC", "DANH MỤC", "SẢN PHẨM", "THUỐC", "TỒN KHO", "HOÁ ĐƠN",
+                "DASHBOARD", "BÁN HÀNG", "TOA THUỐC", "TOA THUỐC MẪU", "DANH MỤC", "SẢN PHẨM", "THUỐC", "TỒN KHO", "HOÁ ĐƠN",
                 "KHÁCH HÀNG", "NHÂN VIÊN", "BÁO CÁO"
             };
 

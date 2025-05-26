@@ -20,13 +20,15 @@ namespace InventoryApp
         private void InitializeComponent()
         {
             panelLeft = new Panel();
+            txtGiamGia = new NumericUpDown();
+            label5 = new Label();
+            label4 = new Label();
             txtTimKhachHang = new TextBox();
             gridViewKhachHang = new DataGridView();
             rbtnTimTheoSoDienThoai = new RadioButton();
             rbtnTimTheoTen = new RadioButton();
             btnTimKhachHang = new CuoreUI.Controls.cuiButton();
             label6 = new Label();
-            button1 = new Button();
             lblOrderTitle = new Label();
             dgvOrderList = new DataGridView();
             lblTotal = new Label();
@@ -49,7 +51,9 @@ namespace InventoryApp
             txtMoTa = new RichTextBox();
             lblGiaBan = new Label();
             lblTenHang = new Label();
+            this.cuiButton1 = new CuoreUI.Controls.cuiButton();
             panelLeft.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)txtGiamGia).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridViewKhachHang).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvOrderList).BeginInit();
             panelRight.SuspendLayout();
@@ -60,13 +64,16 @@ namespace InventoryApp
             // 
             panelLeft.BackColor = Color.Transparent;
             panelLeft.BackgroundImage = Properties.Resources.bg;
+            panelLeft.Controls.Add(this.cuiButton1);
+            panelLeft.Controls.Add(txtGiamGia);
+            panelLeft.Controls.Add(label5);
+            panelLeft.Controls.Add(label4);
             panelLeft.Controls.Add(txtTimKhachHang);
             panelLeft.Controls.Add(gridViewKhachHang);
             panelLeft.Controls.Add(rbtnTimTheoSoDienThoai);
             panelLeft.Controls.Add(rbtnTimTheoTen);
             panelLeft.Controls.Add(btnTimKhachHang);
             panelLeft.Controls.Add(label6);
-            panelLeft.Controls.Add(button1);
             panelLeft.Controls.Add(lblOrderTitle);
             panelLeft.Controls.Add(dgvOrderList);
             panelLeft.Controls.Add(lblTotal);
@@ -75,6 +82,36 @@ namespace InventoryApp
             panelLeft.Name = "panelLeft";
             panelLeft.Size = new Size(600, 687);
             panelLeft.TabIndex = 1;
+            // 
+            // txtGiamGia
+            // 
+            txtGiamGia.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtGiamGia.Location = new Point(353, 337);
+            txtGiamGia.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            txtGiamGia.Name = "txtGiamGia";
+            txtGiamGia.Size = new Size(85, 29);
+            txtGiamGia.TabIndex = 23;
+            txtGiamGia.ValueChanged += txtGiamGia_ValueChanged;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.Location = new Point(437, 335);
+            label5.Name = "label5";
+            label5.Size = new Size(31, 30);
+            label5.TabIndex = 22;
+            label5.Text = "%";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label4.Location = new Point(251, 335);
+            label4.Name = "label4";
+            label4.Size = new Size(102, 30);
+            label4.TabIndex = 21;
+            label4.Text = "Giảm Giá";
             // 
             // txtTimKhachHang
             // 
@@ -168,15 +205,6 @@ namespace InventoryApp
             label6.TabIndex = 5;
             label6.Text = "Tìm Khách";
             // 
-            // button1
-            // 
-            button1.Location = new Point(438, 412);
-            button1.Name = "button1";
-            button1.Size = new Size(8, 8);
-            button1.TabIndex = 3;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
-            // 
             // lblOrderTitle
             // 
             lblOrderTitle.AutoSize = true;
@@ -193,7 +221,7 @@ namespace InventoryApp
             dgvOrderList.Location = new Point(10, 56);
             dgvOrderList.Name = "dgvOrderList";
             dgvOrderList.ReadOnly = true;
-            dgvOrderList.Size = new Size(580, 300);
+            dgvOrderList.Size = new Size(580, 270);
             dgvOrderList.TabIndex = 1;
             dgvOrderList.CellEndEdit += dgvOrderList_CellEndEdit;
             dgvOrderList.CellFormatting += dgvOrderList_CellFormatting;
@@ -203,7 +231,7 @@ namespace InventoryApp
             // 
             lblTotal.AutoSize = true;
             lblTotal.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTotal.Location = new Point(10, 370);
+            lblTotal.Location = new Point(248, 370);
             lblTotal.Name = "lblTotal";
             lblTotal.Size = new Size(257, 30);
             lblTotal.TabIndex = 2;
@@ -528,6 +556,43 @@ namespace InventoryApp
             lblTenHang.TabIndex = 0;
             lblTenHang.Text = "Tên Hàng Hoá";
             // 
+            // cuiButton1
+            // 
+            this.cuiButton1.CheckButton = false;
+            this.cuiButton1.Checked = false;
+            this.cuiButton1.CheckedBackground = Color.FromArgb(255, 106, 0);
+            this.cuiButton1.CheckedForeColor = Color.White;
+            this.cuiButton1.CheckedImageTint = Color.White;
+            this.cuiButton1.CheckedOutline = Color.FromArgb(255, 106, 0);
+            this.cuiButton1.Content = "ÁP DỤNG";
+            this.cuiButton1.DialogResult = DialogResult.None;
+            this.cuiButton1.Font = new Font("Microsoft Sans Serif", 9.75F);
+            this.cuiButton1.ForeColor = Color.White;
+            this.cuiButton1.HoverBackground = Color.WhiteSmoke;
+            this.cuiButton1.HoveredImageTint = Color.White;
+            this.cuiButton1.HoverForeColor = Color.Black;
+            this.cuiButton1.HoverOutline = Color.FromArgb(32, 128, 128, 128);
+            this.cuiButton1.Image = null;
+            this.cuiButton1.ImageAutoCenter = true;
+            this.cuiButton1.ImageExpand = new Point(0, 0);
+            this.cuiButton1.ImageOffset = new Point(0, 0);
+            this.cuiButton1.Location = new Point(471, 335);
+            this.cuiButton1.Name = "cuiButton1";
+            this.cuiButton1.NormalBackground = Color.OrangeRed;
+            this.cuiButton1.NormalForeColor = Color.White;
+            this.cuiButton1.NormalImageTint = Color.White;
+            this.cuiButton1.NormalOutline = Color.FromArgb(64, 128, 128, 128);
+            this.cuiButton1.OutlineThickness = 1F;
+            this.cuiButton1.PressedBackground = Color.WhiteSmoke;
+            this.cuiButton1.PressedForeColor = Color.FromArgb(32, 32, 32);
+            this.cuiButton1.PressedImageTint = Color.White;
+            this.cuiButton1.PressedOutline = Color.FromArgb(64, 128, 128, 128);
+            this.cuiButton1.Rounding = new Padding(8);
+            this.cuiButton1.Size = new Size(116, 30);
+            this.cuiButton1.TabIndex = 24;
+            this.cuiButton1.TextAlignment = StringAlignment.Center;
+            this.cuiButton1.TextOffset = new Point(0, 0);
+            // 
             // POSControl
             // 
             Controls.Add(panelRight);
@@ -536,6 +601,7 @@ namespace InventoryApp
             Size = new Size(1000, 687);
             panelLeft.ResumeLayout(false);
             panelLeft.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)txtGiamGia).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridViewKhachHang).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvOrderList).EndInit();
             panelRight.ResumeLayout(false);

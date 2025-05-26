@@ -14,18 +14,25 @@ namespace InventoryApp
     public partial class ProductControl : UserControl
     {
         private InventoryAppDbContext _dbContext;
+        private BindingNavigator bindingNavigator;
 
         public ProductControl(InventoryAppDbContext dbContext)
         {
             InitializeComponent();
             _dbContext = dbContext;
-            LoadSanPham(_dbContext.Products.ToList());
+            var products = _dbContext.Products.ToList();
+            LoadSanPham(products);
+
+            AutoCompleteStringCollection autoCompleteStringCollection = new AutoCompleteStringCollection();
+            autoCompleteStringCollection.AddRange(products.Select(x => x.TenHang).ToArray());
+            autoCompleteStringCollection.AddRange(products.Select(x => x.MaHang).ToArray());
+            txtTimKiem.AutoCompleteCustomSource = autoCompleteStringCollection;
         }
 
         private void LoadSanPham(List<Product> inventoryList)
         {
             BindingSource bindingSource = new BindingSource();
-            BindingNavigator bindingNavigator = new BindingNavigator(true);
+            bindingNavigator = new BindingNavigator(true);
             bindingSource.DataSource = inventoryList;
             dgvProducts.DataSource = bindingSource;
             bindingNavigator.BindingSource = bindingSource;
@@ -33,7 +40,10 @@ namespace InventoryApp
             bindingNavigator.DeleteItem.Visible = false;
             bindingNavigator.AddNewItem.Visible = false;
             bindingNavigator.ImageScalingSize = new Size(24, 24);
-            this.Controls.Add(bindingNavigator);
+            if (!this.Controls.Contains(bindingNavigator))
+            {
+                this.Controls.Add(bindingNavigator);
+            }
 
             dgvProducts.Columns["Id"].Visible = false;
             dgvProducts.Columns["MaHang"].HeaderText = "Mã Hàng";
@@ -89,7 +99,7 @@ namespace InventoryApp
 
         private void cuiButton1_Click(object sender, EventArgs e)
         {
-            string keyword = txtTimKiem.Content.Trim().ToLower();
+            string keyword = txtTimKiem.Text.Trim().ToLower();
 
             var filtered = _dbContext.Products
                 .Where(p => p.MaHang.ToLower().Contains(keyword) || p.TenHang.ToLower().Contains(keyword))
@@ -156,6 +166,11 @@ namespace InventoryApp
                     progressForm.Close();
                 }
             }
+        }
+
+        private void txtTimKiem_ContentChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

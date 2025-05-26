@@ -38,6 +38,7 @@ namespace InventoryApp
             InitCustomerTable(new List<Customer> { khachHang });
             rbtnTimTheoTen.Checked = true;
             txtTimKhachHang.Text = khachHang.HoTen;
+            txtGiamGia.Value = 0;
         }
 
         private void InitOrderTable(List<OrderDetail> details)
@@ -102,6 +103,7 @@ namespace InventoryApp
         {
             order.Details = details;
             order.OrderDate = DateTime.Now;
+            order.PhanTramGiamGia = int.Parse(txtGiamGia.Value.ToString());
             try
             {
                 order.UserNo = UserSession.CurrentUser.UserNo;
@@ -135,11 +137,18 @@ namespace InventoryApp
             currentOrder.Clear();
             lblTotal.Text = "Tạm tính hiện tại: 0 VNĐ";
             total = 0;
+            txtGiamGia.Value = 0;
             InitOrderTable(new List<OrderDetail>());
             details = new List<OrderDetail>();
             total = 0;
             currentOrder = new List<Product>();
             order = new Order();
+        }
+
+        private void txtGiamGia_ValueChanged(object sender, EventArgs e)
+        {
+            total = TongTien();
+            lblTotal.Text = $"Tạm tính hiện tại: {total:N0} VNĐ";
         }
 
         private void dgvOrderList_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -174,7 +183,14 @@ namespace InventoryApp
 
         private decimal TongTien()
         {
-            return details.Sum(x => x.GiaBan);
+            var tongTien = details.Sum(x => x.GiaBan);
+
+            if (int.Parse(txtGiamGia.Value.ToString()) == 0)
+                return tongTien;
+
+            var tiLe = (double)(double.Parse(txtGiamGia.Value.ToString())/(double)100);
+            var result = tongTien - (decimal)((double)tongTien * (double)tiLe);
+            return result;
         }
 
         private void btnAddCart_Click(object sender, EventArgs e)
@@ -362,6 +378,8 @@ namespace InventoryApp
             section.AddParagraph("Ngày lập hoá đơn: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
             section.AddParagraph("Mã nhân viên: " + order.UserNo);
             section.AddParagraph("Tên nhân viên: " + UserSession.CurrentUser.HoTen);
+            section.AddParagraph("Mã khách hàng: " + lblValueMaKhach.Text);
+            section.AddParagraph("Tên khách hàng: " + lblHienThiTenKhach.Text.Replace("Khách mua: ", ""));
 
             section.AddParagraph("\n");
 
@@ -388,7 +406,8 @@ namespace InventoryApp
                 row.Cells[3].AddParagraph((item.SoLuong * item.GiaBan).ToString("N0"));
             }
 
-            section.AddParagraph("\nTổng tiền: " + total.ToString("N0") + " VNĐ");
+            section.AddParagraph("\nGiảm giá: " + txtGiamGia.Value + "%");
+            section.AddParagraph("Tổng tiền: " + total.ToString("N0") + " VNĐ");
             var pThanhToan = section.AddParagraph("Thanh toán: " + total.ToString("N0") + " VNĐ");
             pThanhToan.Format.Font.Bold = true;
             section.AddParagraph("\n(Giá trên đã bao gồm thuế GTGT)").Format.Font.Italic = true;
@@ -477,5 +496,10 @@ namespace InventoryApp
         private Label lblHienThiTenKhach;
         private TextBox txtTimKhachHang;
         private Label lblValueMaKhach;
+        private Label label5;
+        private Label label4;
+        private TextBox textBox1;
+        private NumericUpDown txtGiamGia;
+        private CuoreUI.Controls.cuiButton cuiButton1;
     }
 }

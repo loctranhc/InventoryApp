@@ -28,13 +28,13 @@
         private void InitializeComponent()
         {
             dgvProducts = new DataGridView();
-            txtTimKiem = new CuoreUI.Controls.cuiTextBox();
             label1 = new Label();
             btnTimKiem = new CuoreUI.Controls.cuiButton();
             btnThem = new CuoreUI.Controls.cuiButton();
             btnNhapHang = new CuoreUI.Controls.cuiButton();
             label2 = new Label();
             cbxCategory = new ComboBox();
+            txtTimKiem = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             SuspendLayout();
             // 
@@ -46,35 +46,6 @@
             dgvProducts.Name = "dgvProducts";
             dgvProducts.Size = new Size(966, 402);
             dgvProducts.TabIndex = 1;
-            // 
-            // txtTimKiem
-            // 
-            txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txtTimKiem.BackgroundColor = Color.White;
-            txtTimKiem.BorderColor = Color.FromArgb(128, 128, 128, 128);
-            txtTimKiem.Content = "";
-            txtTimKiem.FocusBackgroundColor = Color.White;
-            txtTimKiem.FocusBorderColor = Color.FromArgb(255, 106, 0);
-            txtTimKiem.FocusImageTint = Color.White;
-            txtTimKiem.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtTimKiem.ForeColor = Color.Gray;
-            txtTimKiem.Image = null;
-            txtTimKiem.ImageExpand = new Point(0, 0);
-            txtTimKiem.ImageOffset = new Point(0, 0);
-            txtTimKiem.Location = new Point(599, 36);
-            txtTimKiem.Margin = new Padding(4);
-            txtTimKiem.Multiline = false;
-            txtTimKiem.Name = "txtTimKiem";
-            txtTimKiem.NormalImageTint = Color.White;
-            txtTimKiem.Padding = new Padding(15, 15, 15, 0);
-            txtTimKiem.PasswordChar = false;
-            txtTimKiem.PlaceholderColor = SystemColors.WindowText;
-            txtTimKiem.PlaceholderText = "Nhập Mã Hàng hoặc Tên Hàng";
-            txtTimKiem.Rounding = new Padding(8);
-            txtTimKiem.Size = new Size(297, 45);
-            txtTimKiem.TabIndex = 5;
-            txtTimKiem.TextOffset = new Size(0, 0);
-            txtTimKiem.UnderlinedStyle = true;
             // 
             // label1
             // 
@@ -224,17 +195,30 @@
             cbxCategory.TabIndex = 14;
             cbxCategory.SelectedIndexChanged += cbxCategory_SelectedIndexChanged_1;
             // 
+            // txtTimKiem
+            // 
+            txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            txtTimKiem.AutoCompleteMode = AutoCompleteMode.Suggest;
+            txtTimKiem.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            txtTimKiem.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtTimKiem.Location = new Point(599, 44);
+            txtTimKiem.Name = "txtTimKiem";
+            txtTimKiem.Size = new Size(299, 33);
+            txtTimKiem.TabIndex = 15;
+            // 
             // ProductControl
             // 
             AutoScaleMode = AutoScaleMode.Inherit;
             AutoSize = true;
+            BackgroundImage = Properties.Resources.bg;
+            BackgroundImageLayout = ImageLayout.Stretch;
+            Controls.Add(txtTimKiem);
             Controls.Add(cbxCategory);
             Controls.Add(label2);
             Controls.Add(btnNhapHang);
             Controls.Add(btnThem);
             Controls.Add(btnTimKiem);
             Controls.Add(label1);
-            Controls.Add(txtTimKiem);
             Controls.Add(dgvProducts);
             Name = "ProductControl";
             Size = new Size(1003, 591);
@@ -243,12 +227,12 @@
             ResumeLayout(false);
             PerformLayout();
         }
-        private CuoreUI.Controls.cuiTextBox txtTimKiem;
         private Label label1;
         private CuoreUI.Controls.cuiButton btnTimKiem;
         private CuoreUI.Controls.cuiButton btnThem;
         private CuoreUI.Controls.cuiButton btnNhapHang;
         private Label label2;
         private ComboBox cbxCategory;
+        private TextBox txtTimKiem;
     }
 }

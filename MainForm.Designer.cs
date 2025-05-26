@@ -16,6 +16,7 @@
         private Button btnCategory;
         private Button btnDashboard;
         private Button btnMedicine;
+        private Button btnToaThuocMau;
 
         protected override void Dispose(bool disposing)
         {
@@ -37,6 +38,7 @@
             btnCategory = new Button();
             btnDashboard = new Button();
             btnMedicine = new Button();
+            btnToaThuocMau = new Button();
             panelMain = new Panel();
             panelMenu.SuspendLayout();
             SuspendLayout();
@@ -52,6 +54,7 @@
             panelMenu.Controls.Add(btnProducts);
             panelMenu.Controls.Add(btnInventory);
             panelMenu.Controls.Add(btnInvoices);
+            panelMenu.Controls.Add(btnToaThuocMau);
             panelMenu.Controls.Add(btnPrescription);
             panelMenu.Controls.Add(btnPOS);
             panelMenu.Controls.Add(btnDashboard);
