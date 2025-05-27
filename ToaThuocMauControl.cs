@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
+﻿using System.Data;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using DocumentFormat.OpenXml.InkML;
 using MigrateDatabase;
 using MigrateDatabase.Models;
 
@@ -22,6 +13,9 @@ namespace InventoryApp
         {
             InitializeComponent();
             dbContext = context;
+
+            var prescriptions = dbContext.Prescriptions.Where(x => x.IsToaThuocMau == true);
+            LoadDanhSachToa(prescriptions.ToList());
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -75,39 +69,51 @@ namespace InventoryApp
         {
             BindingSource bindingSource = new BindingSource();
             bindingSource.DataSource = details;
-            dgvDonThuocMau.DataSource = bindingSource;
+            dgvChiTiet.DataSource = bindingSource;
 
-            dgvDonThuocMau.Columns["Id"].Visible = false;
-            dgvDonThuocMau.Columns["PrescriptionId"].Visible = false;
-            dgvDonThuocMau.Columns["IsToaThuocMau"].Visible = false;
-            dgvDonThuocMau.Columns["MaKH"].Visible = false;
-            dgvDonThuocMau.Columns["MaNhanVien"].Visible = false;
-            dgvDonThuocMau.Columns["TenDonThuoc"].HeaderText = "Tên Thuốc";
-            dgvDonThuocMau.Columns["LieuDung"].HeaderText = "Liều Dùng";
+            dgvChiTiet.Columns["Id"].Visible = false;
+            dgvChiTiet.Columns["PrescriptionId"].Visible = false;
+            dgvChiTiet.Columns["MaKH"].Visible = false;
+            dgvChiTiet.Columns["MaNhanVien"].Visible = false;
+            dgvChiTiet.Columns["MaThuoc"].HeaderText = "Mã Thuốc";
+            dgvChiTiet.Columns["TenThuoc"].HeaderText = "Tên Thuốc";
+            dgvChiTiet.Columns["LieuDung"].HeaderText = "Liều Dùng";
 
-            dgvDonThuocMau.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvDonThuocMau.AllowUserToAddRows = false;
-            dgvDonThuocMau.AutoGenerateColumns = true;
-            dgvDonThuocMau.ReadOnly = true;
-            dgvDonThuocMau.EnableHeadersVisualStyles = false;
-            dgvDonThuocMau.ColumnHeadersDefaultCellStyle.BackColor = Color.OrangeRed;
-            dgvDonThuocMau.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvDonThuocMau.EnableHeadersVisualStyles = false;
-            dgvDonThuocMau.RowHeadersVisible = false;
-            dgvDonThuocMau.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvDonThuocMau.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvChiTiet.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvChiTiet.AllowUserToAddRows = false;
+            dgvChiTiet.AutoGenerateColumns = true;
+            dgvChiTiet.ReadOnly = true;
+            dgvChiTiet.EnableHeadersVisualStyles = false;
+            dgvChiTiet.ColumnHeadersDefaultCellStyle.BackColor = Color.OrangeRed;
+            dgvChiTiet.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvChiTiet.EnableHeadersVisualStyles = false;
+            dgvChiTiet.RowHeadersVisible = false;
+            dgvChiTiet.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvChiTiet.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
             typeof(DataGridView).InvokeMember("DoubleBuffered",
                 BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
-                null, dgvDonThuocMau, new object[] { true });
+                null, dgvChiTiet, new object[] { true });
 
-            dgvDonThuocMau.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            dgvDonThuocMau.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvDonThuocMau.DefaultCellStyle.Font = new Font("Segoe UI", 10);
-            dgvDonThuocMau.DefaultCellStyle.SelectionBackColor = Color.LightBlue;
-            dgvDonThuocMau.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvDonThuocMau.GridColor = Color.LightGray;
-            dgvDonThuocMau.BackgroundColor = Color.White;
+            dgvChiTiet.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            dgvChiTiet.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvChiTiet.DefaultCellStyle.Font = new Font("Segoe UI", 10);
+            dgvChiTiet.DefaultCellStyle.SelectionBackColor = Color.LightBlue;
+            dgvChiTiet.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvChiTiet.GridColor = Color.LightGray;
+            dgvChiTiet.BackgroundColor = Color.White;
+
+            // Tạo mới cột button
+            DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
+            btnColumn.HeaderText = "Thao Tác";
+            btnColumn.Text = "Xoá";
+            btnColumn.Name = "btnXoa";
+            btnColumn.UseColumnTextForButtonValue = true;
+
+            if (!dgvChiTiet.Columns.Contains("btnXoa"))
+            {
+                dgvChiTiet.Columns.Add(btnColumn);
+            }
         }
 
         private void dgvDonThuocMau_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -120,9 +126,32 @@ namespace InventoryApp
             if (dgvDonThuocMau.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = dgvDonThuocMau.SelectedRows[0];
-                int maDonThuoc = int.Parse(selectedRow.Cells["TenDonThuoc"].Value?.ToString());
-                var details = dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == maDonThuoc);
+                var maDonThuoc = selectedRow.Cells["MaDonThuoc"].Value?.ToString();
+                var idDonThuoc = dbContext.Prescriptions.FirstOrDefault(x => x.MaDonThuoc == maDonThuoc.Trim())?.Id;
+                var details = dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == idDonThuoc);
                 LoadChITiet(details.ToList());
+            }
+        }
+
+        private void dgvChiTiet_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            
+        }
+
+        private void dgvChiTiet_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dgvChiTiet_CellFormatting_1(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgvChiTiet.Columns[e.ColumnIndex].Name == "LieuDung" && e.Value != null)
+            {
+                if (decimal.TryParse(e.Value.ToString(), out decimal value))
+                {
+                    e.Value = $"{value}/lần/ngày";
+                    e.FormattingApplied = true;
+                }
             }
         }
     }

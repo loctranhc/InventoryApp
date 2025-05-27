@@ -33,8 +33,9 @@
             dgvDonThuocMau = new DataGridView();
             dgvChiTiet = new DataGridView();
             btnThem = new CuoreUI.Controls.cuiButton();
-            cuiButton1 = new CuoreUI.Controls.cuiButton();
+            btnThemThuoc = new CuoreUI.Controls.cuiButton();
             cuiButton2 = new CuoreUI.Controls.cuiButton();
+            btnCapNhat = new CuoreUI.Controls.cuiButton();
             ((System.ComponentModel.ISupportInitialize)dgvDonThuocMau).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvChiTiet).BeginInit();
             SuspendLayout();
@@ -74,6 +75,8 @@
             dgvChiTiet.Name = "dgvChiTiet";
             dgvChiTiet.Size = new Size(539, 377);
             dgvChiTiet.TabIndex = 28;
+            dgvChiTiet.CellContentClick += dgvChiTiet_CellContentClick;
+            dgvChiTiet.CellFormatting += dgvChiTiet_CellFormatting_1;
             // 
             // btnThem
             // 
@@ -95,7 +98,7 @@
             btnThem.ImageAutoCenter = true;
             btnThem.ImageExpand = new Point(0, 0);
             btnThem.ImageOffset = new Point(0, 0);
-            btnThem.Location = new Point(809, 20);
+            btnThem.Location = new Point(460, 21);
             btnThem.Name = "btnThem";
             btnThem.NormalBackground = Color.ForestGreen;
             btnThem.NormalForeColor = Color.White;
@@ -112,42 +115,42 @@
             btnThem.TextAlignment = StringAlignment.Center;
             btnThem.TextOffset = new Point(0, 0);
             // 
-            // cuiButton1
+            // btnThemThuoc
             // 
-            cuiButton1.CheckButton = false;
-            cuiButton1.Checked = false;
-            cuiButton1.CheckedBackground = Color.FromArgb(255, 106, 0);
-            cuiButton1.CheckedForeColor = Color.White;
-            cuiButton1.CheckedImageTint = Color.White;
-            cuiButton1.CheckedOutline = Color.FromArgb(255, 106, 0);
-            cuiButton1.Content = "Sửa";
-            cuiButton1.DialogResult = DialogResult.None;
-            cuiButton1.Font = new Font("Microsoft Sans Serif", 9.75F);
-            cuiButton1.ForeColor = Color.White;
-            cuiButton1.HoverBackground = Color.White;
-            cuiButton1.HoveredImageTint = Color.White;
-            cuiButton1.HoverForeColor = Color.Black;
-            cuiButton1.HoverOutline = Color.FromArgb(32, 128, 128, 128);
-            cuiButton1.Image = null;
-            cuiButton1.ImageAutoCenter = true;
-            cuiButton1.ImageExpand = new Point(0, 0);
-            cuiButton1.ImageOffset = new Point(0, 0);
-            cuiButton1.Location = new Point(907, 21);
-            cuiButton1.Name = "cuiButton1";
-            cuiButton1.NormalBackground = SystemColors.HotTrack;
-            cuiButton1.NormalForeColor = Color.White;
-            cuiButton1.NormalImageTint = Color.White;
-            cuiButton1.NormalOutline = Color.FromArgb(64, 128, 128, 128);
-            cuiButton1.OutlineThickness = 1F;
-            cuiButton1.PressedBackground = Color.WhiteSmoke;
-            cuiButton1.PressedForeColor = Color.FromArgb(32, 32, 32);
-            cuiButton1.PressedImageTint = Color.White;
-            cuiButton1.PressedOutline = Color.FromArgb(64, 128, 128, 128);
-            cuiButton1.Rounding = new Padding(8);
-            cuiButton1.Size = new Size(93, 45);
-            cuiButton1.TabIndex = 30;
-            cuiButton1.TextAlignment = StringAlignment.Center;
-            cuiButton1.TextOffset = new Point(0, 0);
+            btnThemThuoc.CheckButton = false;
+            btnThemThuoc.Checked = false;
+            btnThemThuoc.CheckedBackground = Color.FromArgb(255, 106, 0);
+            btnThemThuoc.CheckedForeColor = Color.White;
+            btnThemThuoc.CheckedImageTint = Color.White;
+            btnThemThuoc.CheckedOutline = Color.FromArgb(255, 106, 0);
+            btnThemThuoc.Content = "Thêm Thuốc";
+            btnThemThuoc.DialogResult = DialogResult.None;
+            btnThemThuoc.Font = new Font("Microsoft Sans Serif", 9.75F);
+            btnThemThuoc.ForeColor = Color.White;
+            btnThemThuoc.HoverBackground = Color.White;
+            btnThemThuoc.HoveredImageTint = Color.White;
+            btnThemThuoc.HoverForeColor = Color.Black;
+            btnThemThuoc.HoverOutline = Color.FromArgb(32, 128, 128, 128);
+            btnThemThuoc.Image = null;
+            btnThemThuoc.ImageAutoCenter = true;
+            btnThemThuoc.ImageExpand = new Point(0, 0);
+            btnThemThuoc.ImageOffset = new Point(0, 0);
+            btnThemThuoc.Location = new Point(891, 21);
+            btnThemThuoc.Name = "btnThemThuoc";
+            btnThemThuoc.NormalBackground = SystemColors.HotTrack;
+            btnThemThuoc.NormalForeColor = Color.White;
+            btnThemThuoc.NormalImageTint = Color.White;
+            btnThemThuoc.NormalOutline = Color.FromArgb(64, 128, 128, 128);
+            btnThemThuoc.OutlineThickness = 1F;
+            btnThemThuoc.PressedBackground = Color.WhiteSmoke;
+            btnThemThuoc.PressedForeColor = Color.FromArgb(32, 32, 32);
+            btnThemThuoc.PressedImageTint = Color.White;
+            btnThemThuoc.PressedOutline = Color.FromArgb(64, 128, 128, 128);
+            btnThemThuoc.Rounding = new Padding(8);
+            btnThemThuoc.Size = new Size(109, 45);
+            btnThemThuoc.TabIndex = 30;
+            btnThemThuoc.TextAlignment = StringAlignment.Center;
+            btnThemThuoc.TextOffset = new Point(0, 0);
             // 
             // cuiButton2
             // 
@@ -186,21 +189,59 @@
             cuiButton2.TextAlignment = StringAlignment.Center;
             cuiButton2.TextOffset = new Point(0, 0);
             // 
+            // btnCapNhat
+            // 
+            btnCapNhat.CheckButton = false;
+            btnCapNhat.Checked = false;
+            btnCapNhat.CheckedBackground = Color.FromArgb(255, 106, 0);
+            btnCapNhat.CheckedForeColor = Color.White;
+            btnCapNhat.CheckedImageTint = Color.White;
+            btnCapNhat.CheckedOutline = Color.FromArgb(255, 106, 0);
+            btnCapNhat.Content = "LƯU TOA THUỐC";
+            btnCapNhat.DialogResult = DialogResult.None;
+            btnCapNhat.Font = new Font("Microsoft Sans Serif", 9.75F);
+            btnCapNhat.ForeColor = Color.White;
+            btnCapNhat.HoverBackground = Color.White;
+            btnCapNhat.HoveredImageTint = Color.White;
+            btnCapNhat.HoverForeColor = Color.Black;
+            btnCapNhat.HoverOutline = Color.FromArgb(32, 128, 128, 128);
+            btnCapNhat.Image = null;
+            btnCapNhat.ImageAutoCenter = true;
+            btnCapNhat.ImageExpand = new Point(0, 0);
+            btnCapNhat.ImageOffset = new Point(0, 0);
+            btnCapNhat.Location = new Point(927, 454);
+            btnCapNhat.Name = "btnCapNhat";
+            btnCapNhat.NormalBackground = Color.MediumVioletRed;
+            btnCapNhat.NormalForeColor = Color.White;
+            btnCapNhat.NormalImageTint = Color.White;
+            btnCapNhat.NormalOutline = Color.FromArgb(64, 128, 128, 128);
+            btnCapNhat.OutlineThickness = 1F;
+            btnCapNhat.PressedBackground = Color.WhiteSmoke;
+            btnCapNhat.PressedForeColor = Color.FromArgb(32, 32, 32);
+            btnCapNhat.PressedImageTint = Color.White;
+            btnCapNhat.PressedOutline = Color.FromArgb(64, 128, 128, 128);
+            btnCapNhat.Rounding = new Padding(8);
+            btnCapNhat.Size = new Size(171, 79);
+            btnCapNhat.TabIndex = 32;
+            btnCapNhat.TextAlignment = StringAlignment.Center;
+            btnCapNhat.TextOffset = new Point(0, 0);
+            // 
             // ToaThuocMauControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.bg;
             BackgroundImageLayout = ImageLayout.Stretch;
+            Controls.Add(btnCapNhat);
             Controls.Add(cuiButton2);
-            Controls.Add(cuiButton1);
+            Controls.Add(btnThemThuoc);
             Controls.Add(btnThem);
             Controls.Add(dgvChiTiet);
             Controls.Add(label6);
             Controls.Add(textBox1);
             Controls.Add(dgvDonThuocMau);
             Name = "ToaThuocMauControl";
-            Size = new Size(1114, 503);
+            Size = new Size(1115, 550);
             ((System.ComponentModel.ISupportInitialize)dgvDonThuocMau).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvChiTiet).EndInit();
             ResumeLayout(false);
@@ -214,7 +255,8 @@
         private DataGridView dgvDonThuocMau;
         private DataGridView dgvChiTiet;
         private CuoreUI.Controls.cuiButton btnThem;
-        private CuoreUI.Controls.cuiButton cuiButton1;
+        private CuoreUI.Controls.cuiButton btnThemThuoc;
         private CuoreUI.Controls.cuiButton cuiButton2;
+        private CuoreUI.Controls.cuiButton btnCapNhat;
     }
 }

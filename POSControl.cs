@@ -20,6 +20,7 @@ namespace InventoryApp
         private void InitializeComponent()
         {
             panelLeft = new Panel();
+            cuiButton1 = new CuoreUI.Controls.cuiButton();
             txtGiamGia = new NumericUpDown();
             label5 = new Label();
             label4 = new Label();
@@ -51,7 +52,6 @@ namespace InventoryApp
             txtMoTa = new RichTextBox();
             lblGiaBan = new Label();
             lblTenHang = new Label();
-            this.cuiButton1 = new CuoreUI.Controls.cuiButton();
             panelLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)txtGiamGia).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridViewKhachHang).BeginInit();
@@ -64,7 +64,7 @@ namespace InventoryApp
             // 
             panelLeft.BackColor = Color.Transparent;
             panelLeft.BackgroundImage = Properties.Resources.bg;
-            panelLeft.Controls.Add(this.cuiButton1);
+            panelLeft.Controls.Add(cuiButton1);
             panelLeft.Controls.Add(txtGiamGia);
             panelLeft.Controls.Add(label5);
             panelLeft.Controls.Add(label4);
@@ -82,6 +82,43 @@ namespace InventoryApp
             panelLeft.Name = "panelLeft";
             panelLeft.Size = new Size(600, 687);
             panelLeft.TabIndex = 1;
+            // 
+            // cuiButton1
+            // 
+            cuiButton1.CheckButton = false;
+            cuiButton1.Checked = false;
+            cuiButton1.CheckedBackground = Color.FromArgb(255, 106, 0);
+            cuiButton1.CheckedForeColor = Color.White;
+            cuiButton1.CheckedImageTint = Color.White;
+            cuiButton1.CheckedOutline = Color.FromArgb(255, 106, 0);
+            cuiButton1.Content = "ÁP DỤNG";
+            cuiButton1.DialogResult = DialogResult.None;
+            cuiButton1.Font = new Font("Microsoft Sans Serif", 9.75F);
+            cuiButton1.ForeColor = Color.White;
+            cuiButton1.HoverBackground = Color.WhiteSmoke;
+            cuiButton1.HoveredImageTint = Color.White;
+            cuiButton1.HoverForeColor = Color.Black;
+            cuiButton1.HoverOutline = Color.FromArgb(32, 128, 128, 128);
+            cuiButton1.Image = null;
+            cuiButton1.ImageAutoCenter = true;
+            cuiButton1.ImageExpand = new Point(0, 0);
+            cuiButton1.ImageOffset = new Point(0, 0);
+            cuiButton1.Location = new Point(471, 335);
+            cuiButton1.Name = "cuiButton1";
+            cuiButton1.NormalBackground = Color.OrangeRed;
+            cuiButton1.NormalForeColor = Color.White;
+            cuiButton1.NormalImageTint = Color.White;
+            cuiButton1.NormalOutline = Color.FromArgb(64, 128, 128, 128);
+            cuiButton1.OutlineThickness = 1F;
+            cuiButton1.PressedBackground = Color.WhiteSmoke;
+            cuiButton1.PressedForeColor = Color.FromArgb(32, 32, 32);
+            cuiButton1.PressedImageTint = Color.White;
+            cuiButton1.PressedOutline = Color.FromArgb(64, 128, 128, 128);
+            cuiButton1.Rounding = new Padding(8);
+            cuiButton1.Size = new Size(116, 30);
+            cuiButton1.TabIndex = 24;
+            cuiButton1.TextAlignment = StringAlignment.Center;
+            cuiButton1.TextOffset = new Point(0, 0);
             // 
             // txtGiamGia
             // 
@@ -132,6 +169,7 @@ namespace InventoryApp
             gridViewKhachHang.Size = new Size(580, 155);
             gridViewKhachHang.TabIndex = 17;
             gridViewKhachHang.CellClick += gridViewKhachHang_CellClick;
+            gridViewKhachHang.CellContentClick += gridViewKhachHang_CellContentClick;
             // 
             // rbtnTimTheoSoDienThoai
             // 
@@ -556,43 +594,6 @@ namespace InventoryApp
             lblTenHang.TabIndex = 0;
             lblTenHang.Text = "Tên Hàng Hoá";
             // 
-            // cuiButton1
-            // 
-            this.cuiButton1.CheckButton = false;
-            this.cuiButton1.Checked = false;
-            this.cuiButton1.CheckedBackground = Color.FromArgb(255, 106, 0);
-            this.cuiButton1.CheckedForeColor = Color.White;
-            this.cuiButton1.CheckedImageTint = Color.White;
-            this.cuiButton1.CheckedOutline = Color.FromArgb(255, 106, 0);
-            this.cuiButton1.Content = "ÁP DỤNG";
-            this.cuiButton1.DialogResult = DialogResult.None;
-            this.cuiButton1.Font = new Font("Microsoft Sans Serif", 9.75F);
-            this.cuiButton1.ForeColor = Color.White;
-            this.cuiButton1.HoverBackground = Color.WhiteSmoke;
-            this.cuiButton1.HoveredImageTint = Color.White;
-            this.cuiButton1.HoverForeColor = Color.Black;
-            this.cuiButton1.HoverOutline = Color.FromArgb(32, 128, 128, 128);
-            this.cuiButton1.Image = null;
-            this.cuiButton1.ImageAutoCenter = true;
-            this.cuiButton1.ImageExpand = new Point(0, 0);
-            this.cuiButton1.ImageOffset = new Point(0, 0);
-            this.cuiButton1.Location = new Point(471, 335);
-            this.cuiButton1.Name = "cuiButton1";
-            this.cuiButton1.NormalBackground = Color.OrangeRed;
-            this.cuiButton1.NormalForeColor = Color.White;
-            this.cuiButton1.NormalImageTint = Color.White;
-            this.cuiButton1.NormalOutline = Color.FromArgb(64, 128, 128, 128);
-            this.cuiButton1.OutlineThickness = 1F;
-            this.cuiButton1.PressedBackground = Color.WhiteSmoke;
-            this.cuiButton1.PressedForeColor = Color.FromArgb(32, 32, 32);
-            this.cuiButton1.PressedImageTint = Color.White;
-            this.cuiButton1.PressedOutline = Color.FromArgb(64, 128, 128, 128);
-            this.cuiButton1.Rounding = new Padding(8);
-            this.cuiButton1.Size = new Size(116, 30);
-            this.cuiButton1.TabIndex = 24;
-            this.cuiButton1.TextAlignment = StringAlignment.Center;
-            this.cuiButton1.TextOffset = new Point(0, 0);
-            // 
             // POSControl
             // 
             Controls.Add(panelRight);
@@ -632,6 +633,9 @@ namespace InventoryApp
 
         }
 
+        private void gridViewKhachHang_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
+        }
     }
 }

@@ -365,13 +365,13 @@ namespace InventoryApp
             style.Font.Size = 10;
 
             // Header cửa hàng
-            var header = section.AddParagraph("Quầy Thuốc Bác Sĩ Chín");
+            var header = section.AddParagraph("Quầy Thuốc Bác Sĩ Chín\n");
             header.Format.Alignment = ParagraphAlignment.Center;
             header.Format.Font.Bold = true;
             header.Format.Font.Size = 14;
 
             //section.AddParagraph("www.bachhoaxanh.com", "Normal").Format.Alignment = ParagraphAlignment.Center;
-            //section.AddParagraph("1212 - 1214 Huỳnh Tấn Phát, Khu phố 5, Phường Tân Phú, Quận 7, TP. HCM", "Normal").Format.Alignment = ParagraphAlignment.Center;
+            section.AddParagraph("CFVP+Q7W, ĐT749B, Minh Hoà, Dầu Tiếng, Bình Dương, Việt Nam", "Normal").Format.Alignment = ParagraphAlignment.Center;
 
             section.AddParagraph("\nPHIẾU THANH TOÁN", "Normal").Format.Alignment = ParagraphAlignment.Center;
             section.AddParagraph("\nHoá đơn số: " + order.OrderNo);

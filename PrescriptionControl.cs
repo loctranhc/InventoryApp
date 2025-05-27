@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
@@ -21,6 +22,7 @@ namespace InventoryApp
         private InventoryAppDbContext appDbContext;
         private BindingList<PrescriptionDetail> currentPrescription = new BindingList<PrescriptionDetail>();
         private List<Medicine> currentMedicine = new List<Medicine>();
+        private Customer curentCustomer = new Customer();
 
         public PrescriptionControl(InventoryAppDbContext dbContext)
         {
@@ -101,11 +103,11 @@ namespace InventoryApp
 
             // Header
             Paragraph header = section.AddParagraph();
-            header.AddFormattedText("Tên đơn vị: TRUNG TÂM Y TẾ HUYỆN BÀU BÀNG", TextFormat.Bold);
+            header.AddFormattedText("Tên đơn vị: Quầy Thuốc Bác Sĩ Chín", TextFormat.Bold);
+            header.AddFormattedText("Địa chỉ: CFVP+Q7W, ĐT749B, Minh Hoà, Dầu Tiếng, Bình Dương, Việt Nam", TextFormat.Bold);
             header.Format.Alignment = ParagraphAlignment.Left;
 
             Paragraph rightHeader = section.AddParagraph();
-            rightHeader.AddText("Số phiếu: 17402/2025\nMã y tế: 48012821");
             rightHeader.Format.Alignment = ParagraphAlignment.Right;
 
             section.AddParagraph("\n");
@@ -118,25 +120,24 @@ namespace InventoryApp
             title.Format.SpaceAfter = 10;
 
             // Patient Info
-            section.AddParagraph("Họ tên: LÊ QUANG BÌNH        Tuổi: 50       Cân nặng: 80 Kg     Nam/Nữ: Nam");
-            section.AddParagraph("Mã số thẻ bảo hiểm y tế (nếu có): GD4757424653046");
-            section.AddParagraph("Địa chỉ liên hệ: ..., Xã Lai Hưng, Huyện Bàu Bàng, Tỉnh Bình Dương");
-            section.AddParagraph("Chẩn đoán: 120 - Cơn đau thắt ngực ổn định không kiểm soát đầy đủ");
+            section.AddParagraph($"Họ tên: {lblValueTenKhachHang.Text}");
+            section.AddParagraph($"Địa chỉ liên hệ: {curentCustomer.DiaChi}");
+            section.AddParagraph($"Số điện thoại liên hệ: {curentCustomer.Phone}");
 
             // Treatment
             section.AddParagraph("\n**Thuốc điều trị:**");
 
             var table = section.AddTable();
             table.Borders.Width = 0.5;
+            table.AddColumn("6cm");
+            table.AddColumn("3cm");
             table.AddColumn("5cm");
-            table.AddColumn("2cm");
-            table.AddColumn("4cm");
 
             var headerRow = table.AddRow();
             headerRow.Shading.Color = Colors.LightGray;
             headerRow.Cells[0].AddParagraph("Tên thuốc");
-            headerRow.Cells[1].AddParagraph("Số lượng");
-            headerRow.Cells[2].AddParagraph("Đơn giá (VNĐ)");
+            headerRow.Cells[1].AddParagraph("Liều dùng");
+            headerRow.Cells[2].AddParagraph("Ghi chú");
 
             foreach (var medicine in currentPrescription)
             {
@@ -145,15 +146,11 @@ namespace InventoryApp
                 row.Cells[1].AddParagraph($"{medicine.LieuDung}/lần/ngày");
             }
 
-            // Notes
-            section.AddParagraph("\nLời dặn:  Tái khám nhịn ăn sáng XN TQ");
+            section.AddParagraph("\nLời dặn:  ..........................................");
 
-            section.AddParagraph("\n\nNgày 23 tháng 05 năm 2025").Format.Alignment = ParagraphAlignment.Right;
+            section.AddParagraph($"\n\nNgày {DateTime.Now.Day} tháng {DateTime.Now.Month} năm {DateTime.Now.Year}").Format.Alignment = ParagraphAlignment.Right;
             section.AddParagraph("Bác sỹ/Y sỹ khám bệnh").Format.Alignment = ParagraphAlignment.Right;
             section.AddParagraph("(Ký, ghi rõ họ tên)").Format.Alignment = ParagraphAlignment.Right;
-
-            section.AddParagraph("\n\nBS. Nguyễn Thị Hương Giang").Format.Alignment = ParagraphAlignment.Right;
-            section.AddParagraph("Thứ hai, 02/06/2025").Format.Alignment = ParagraphAlignment.Right;
 
             section.AddParagraph("\n\n*Khám lại xin mang theo đơn này*");
 
@@ -219,6 +216,7 @@ namespace InventoryApp
                 {
                     lblValueTenKhachHang.Text = khachHang.HoTen;
                     lblValueMaKhach.Text = khachHang.CustomerNo;
+                    curentCustomer = khachHang;
                 }
             }
         }
