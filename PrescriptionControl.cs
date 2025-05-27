@@ -39,6 +39,9 @@ namespace InventoryApp
             InitCustomerTable(new List<Customer> { defaultKhachHang });
             lblValueMaKhach.Text = defaultKhachHang.CustomerNo;
             lblValueTenKhachHang.Text = defaultKhachHang.HoTen;
+
+            comboBox1.Items.Add("Chưa chọn");
+            comboBox1.Items.AddRange(dbContext.Prescriptions.Where(x => x.IsToaThuocMau == true).Select(x => x.TenDonThuoc).ToArray());
         }
 
         private void InitPrescriptionTable(BindingList<PrescriptionDetail> medicines)
@@ -104,7 +107,7 @@ namespace InventoryApp
             // Header
             Paragraph header = section.AddParagraph();
             header.AddFormattedText("Tên đơn vị: Quầy Thuốc Bác Sĩ Chín", TextFormat.Bold);
-            header.AddFormattedText("Địa chỉ: CFVP+Q7W, ĐT749B, Minh Hoà, Dầu Tiếng, Bình Dương, Việt Nam", TextFormat.Bold);
+            header.AddFormattedText("\nĐịa chỉ: CFVP+Q7W, ĐT749B, Minh Hoà, Dầu Tiếng, Bình Dương, Việt Nam", TextFormat.Bold);
             header.Format.Alignment = ParagraphAlignment.Left;
 
             Paragraph rightHeader = section.AddParagraph();
@@ -330,7 +333,7 @@ namespace InventoryApp
             appDbContext.SaveChanges();
 
             var prescription = appDbContext.Prescriptions.FirstOrDefault(x => x.MaDonThuoc == maThuoc);
-            prescription.MaDonThuoc =  $"TT-{prescription.Id}";
+            prescription.MaDonThuoc = $"TT-{prescription.Id}";
 
             appDbContext.PrescriptionDetails.AddRange(currentPrescription.Select(x => new PrescriptionDetail
             {
@@ -372,6 +375,25 @@ namespace InventoryApp
         {
             var form = new CustomerForm(appDbContext);
             form.ShowDialog();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var toaThuoc = appDbContext.Prescriptions.FirstOrDefault(x => x.TenDonThuoc.ToLower() == comboBox1.Text.ToLower());
+            if(toaThuoc is not null)
+            {
+                currentPrescription.Clear();
+                currentMedicine.Clear();
+                var chiTiet = appDbContext.PrescriptionDetails.Where(x => x.PrescriptionId == toaThuoc.Id).ToList();
+                foreach(var item in chiTiet)
+                {
+                    currentPrescription.Add(item);
+                    var thuoc = appDbContext.Medicines.FirstOrDefault(x => x.MaThuoc == item.MaThuoc);
+                    currentMedicine.Add(thuoc);
+                }
+
+                InitPrescriptionTable(currentPrescription);
+            }
         }
     }
 }

@@ -32,6 +32,8 @@
             label1 = new Label();
             txtLieuDung = new TextBox();
             panelLeft = new Panel();
+            label2 = new Label();
+            comboBox1 = new ComboBox();
             txtTimKhachHang = new TextBox();
             gridViewKhachHang = new DataGridView();
             rbtnTimTheoSoDienThoai = new RadioButton();
@@ -334,6 +336,8 @@
             // 
             panelLeft.BackColor = Color.Transparent;
             panelLeft.BackgroundImage = Properties.Resources.bg;
+            panelLeft.Controls.Add(label2);
+            panelLeft.Controls.Add(comboBox1);
             panelLeft.Controls.Add(txtTimKhachHang);
             panelLeft.Controls.Add(gridViewKhachHang);
             panelLeft.Controls.Add(rbtnTimTheoSoDienThoai);
@@ -348,6 +352,26 @@
             panelLeft.Name = "panelLeft";
             panelLeft.Size = new Size(600, 843);
             panelLeft.TabIndex = 3;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Location = new Point(10, 65);
+            label2.Name = "label2";
+            label2.Size = new Size(248, 21);
+            label2.TabIndex = 22;
+            label2.Text = "Lựa chọn toa thuốc mẫu (nếu có)";
+            // 
+            // comboBox1
+            // 
+            comboBox1.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(264, 62);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(326, 28);
+            comboBox1.TabIndex = 21;
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
             // txtTimKhachHang
             // 
@@ -463,10 +487,10 @@
             // dgvPrescriptionList
             // 
             dgvPrescriptionList.AllowUserToAddRows = false;
-            dgvPrescriptionList.Location = new Point(10, 56);
+            dgvPrescriptionList.Location = new Point(10, 102);
             dgvPrescriptionList.Name = "dgvPrescriptionList";
             dgvPrescriptionList.ReadOnly = true;
-            dgvPrescriptionList.Size = new Size(580, 300);
+            dgvPrescriptionList.Size = new Size(580, 271);
             dgvPrescriptionList.TabIndex = 1;
             dgvPrescriptionList.CellClick += dgvPrescriptionList_CellClick_1;
             dgvPrescriptionList.CellFormatting += dgvPrescriptionList_CellFormatting;
@@ -513,5 +537,7 @@
         private Label label1;
         private TextBox txtLieuDung;
         private Label lblValueTenKhachHang;
+        private Label label2;
+        private ComboBox comboBox1;
     }
 }
