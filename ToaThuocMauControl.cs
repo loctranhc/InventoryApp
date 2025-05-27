@@ -14,6 +14,11 @@ namespace InventoryApp
             InitializeComponent();
             dbContext = context;
 
+            LoadAllDsToa();
+        }
+
+        private void LoadAllDsToa()
+        {
             var prescriptions = dbContext.Prescriptions.Where(x => x.IsToaThuocMau == true);
             LoadDanhSachToa(prescriptions.ToList());
         }
@@ -135,7 +140,7 @@ namespace InventoryApp
 
         private void dgvChiTiet_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            
+
         }
 
         private void dgvChiTiet_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -152,6 +157,16 @@ namespace InventoryApp
                     e.Value = $"{value}/lần/ngày";
                     e.FormattingApplied = true;
                 }
+            }
+        }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            ThongTinDonThuocMau thongTinDonThuocMau = new ThongTinDonThuocMau(dbContext);
+            if (thongTinDonThuocMau.ShowDialog() == DialogResult.OK) {
+                var toaThuoc = thongTinDonThuocMau.Tag as Prescription;
+                LoadDanhSachToa(new List<Prescription> { toaThuoc });
+                LoadChITiet(dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == toaThuoc.Id).ToList());
             }
         }
     }

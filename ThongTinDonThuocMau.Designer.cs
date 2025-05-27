@@ -68,7 +68,9 @@
             dgvDonThuoc.Name = "dgvDonThuoc";
             dgvDonThuoc.Size = new Size(523, 395);
             dgvDonThuoc.TabIndex = 4;
+            dgvDonThuoc.CellClick += dgvDonThuoc_CellClick;
             dgvDonThuoc.CellContentClick += dgvDonThuoc_CellContentClick;
+            dgvDonThuoc.CellFormatting += dgvDonThuoc_CellFormatting;
             // 
             // label2
             // 
@@ -99,7 +101,7 @@
             panel1.Controls.Add(btnThemThuoc);
             panel1.Location = new Point(559, 72);
             panel1.Name = "panel1";
-            panel1.Size = new Size(296, 318);
+            panel1.Size = new Size(296, 332);
             panel1.TabIndex = 7;
             // 
             // label3
@@ -114,10 +116,12 @@
             // 
             // txtLieuDung
             // 
-            txtLieuDung.Location = new Point(3, 246);
+            txtLieuDung.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtLieuDung.Location = new Point(3, 247);
             txtLieuDung.Name = "txtLieuDung";
-            txtLieuDung.Size = new Size(290, 23);
+            txtLieuDung.Size = new Size(290, 27);
             txtLieuDung.TabIndex = 11;
+            txtLieuDung.TextChanged += txtLieuDung_TextChanged;
             // 
             // richTextBox1
             // 
@@ -149,7 +153,7 @@
             btnThemThuoc.ImageAutoCenter = true;
             btnThemThuoc.ImageExpand = new Point(0, 0);
             btnThemThuoc.ImageOffset = new Point(0, 0);
-            btnThemThuoc.Location = new Point(3, 275);
+            btnThemThuoc.Location = new Point(127, 280);
             btnThemThuoc.Name = "btnThemThuoc";
             btnThemThuoc.NormalBackground = Color.Green;
             btnThemThuoc.NormalForeColor = Color.White;
@@ -161,7 +165,7 @@
             btnThemThuoc.PressedImageTint = Color.White;
             btnThemThuoc.PressedOutline = Color.FromArgb(64, 128, 128, 128);
             btnThemThuoc.Rounding = new Padding(8);
-            btnThemThuoc.Size = new Size(290, 40);
+            btnThemThuoc.Size = new Size(166, 40);
             btnThemThuoc.TabIndex = 9;
             btnThemThuoc.TextAlignment = StringAlignment.Center;
             btnThemThuoc.TextOffset = new Point(0, 0);
@@ -203,6 +207,7 @@
             btnLuuThongTin.TabIndex = 8;
             btnLuuThongTin.TextAlignment = StringAlignment.Center;
             btnLuuThongTin.TextOffset = new Point(0, 0);
+            btnLuuThongTin.Click += btnLuuThongTin_Click;
             // 
             // ThongTinDonThuocMau
             // 
@@ -218,6 +223,7 @@
             Controls.Add(txtTenDonThuoc);
             Name = "ThongTinDonThuocMau";
             Text = "ThongTinDonThuocMau";
+            Load += ThongTinDonThuocMau_Load;
             ((System.ComponentModel.ISupportInitialize)dgvDonThuoc).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
