@@ -23,6 +23,7 @@ namespace InventoryApp
         private BindingList<PrescriptionDetail> currentPrescription = new BindingList<PrescriptionDetail>();
         private List<Medicine> currentMedicine = new List<Medicine>();
         private Customer curentCustomer = new Customer();
+        private string PrescriptionNo = "";
 
         public PrescriptionControl(InventoryAppDbContext dbContext)
         {
@@ -127,6 +128,7 @@ namespace InventoryApp
             title.Format.SpaceAfter = 10;
 
             // Patient Info
+            section.AddParagraph($"Mã đơn thuốc: {PrescriptionNo}");
             section.AddParagraph($"Họ tên: {lblValueTenKhachHang.Text}");
             section.AddParagraph($"Địa chỉ liên hệ: {curentCustomer.DiaChi}");
             section.AddParagraph($"Số điện thoại liên hệ: {curentCustomer.Phone}");
@@ -169,7 +171,16 @@ namespace InventoryApp
             renderer.Document = doc;
             renderer.RenderDocument();
 
-            string filename = $"don_thuoc_{DateTimeOffset.Now.ToUnixTimeSeconds()}.pdf";
+            string filename = $"{PrescriptionNo}_{DateTimeOffset.Now.ToUnixTimeSeconds()}.pdf";
+            // 1. Tạo thư mục lưu trữ theo thời gian hiện tại
+            string folderName = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string baseFolder = @"D:\toathuoc";
+            string fullPath = System.IO.Path.Combine(baseFolder, folderName);
+            // 2. Tạo thư mục nếu chưa tồn tại
+            if (!Directory.Exists(fullPath))
+                Directory.CreateDirectory(fullPath);
+            // 3. Đường dẫn file đầy đủ
+            string filePath = System.IO.Path.Combine(fullPath, filename);
             renderer.PdfDocument.Save(filename);
             Process.Start("explorer", filename);
         }
@@ -357,6 +368,7 @@ namespace InventoryApp
 
             var prescription = appDbContext.Prescriptions.FirstOrDefault(x => x.MaDonThuoc == maThuoc);
             prescription.MaDonThuoc = $"TT-{prescription.Id}";
+            PrescriptionNo = prescription.MaDonThuoc;
 
             appDbContext.PrescriptionDetails.AddRange(currentPrescription.Select(x => new PrescriptionDetail
             {

@@ -9,6 +9,7 @@ using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using MigrateDatabase;
 using MigrateDatabase.Models;
+using OfficeOpenXml;
 
 namespace InventoryApp
 {
@@ -457,15 +458,23 @@ namespace InventoryApp
             section.AddParagraph("\nLưu ý: Hóa đơn chỉ xuất trong ngày. Quý khách vui lòng liên hệ thu ngân để được hỗ trợ.");
 
             // Tạo PDF
-            string filename = $"hoa_don_ban_hang_{DateTimeOffset.Now.ToUnixTimeSeconds()}.pdf";
+            string filename = $"{order.OrderNo.ToLower()}_{DateTimeOffset.Now.ToUnixTimeSeconds()}.pdf";
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(true);
             renderer.Document = doc;
             renderer.RenderDocument();
-            renderer.PdfDocument.Save(filename);
+            // 1. Tạo thư mục lưu trữ theo thời gian hiện tại
+            string folderName = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string baseFolder = @"D:\hoadonbanhang";
+            string fullPath = Path.Combine(baseFolder, folderName);
+            // 2. Tạo thư mục nếu chưa tồn tại
+            if (!Directory.Exists(fullPath))
+                Directory.CreateDirectory(fullPath);
+            // 3. Đường dẫn file đầy đủ
+            string filePath = Path.Combine(fullPath, filename);
+            renderer.PdfDocument.Save(filePath);
 
-            Process.Start(new ProcessStartInfo { FileName = filename, UseShellExecute = true });
+            Process.Start(new ProcessStartInfo { FileName = filePath, UseShellExecute = true });
         }
-
 
         private void ExportInvoiceToPDF()
         {

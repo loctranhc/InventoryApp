@@ -130,7 +130,7 @@ namespace InventoryApp
                 });
                 foreach (var item in checkExists)
                 {
-                     
+
                     var thuoc = context.Medicines.FirstOrDefault(x => x.MaThuoc == item.Key);
                     ws.Cells[currentRow, 1].Value = stt++;
                     ws.Cells[currentRow, 2].Value = thuoc.MaThuoc;
@@ -179,9 +179,142 @@ namespace InventoryApp
             }
         }
 
+        public List<InventoryReportItem> GetInventoryReport(DateTime fromDate, DateTime toDate)
+        {
+            var nhap = context.NhapXuatHangHoas
+                .Where(x => x.CreatedTime >= fromDate && x.CreatedTime <= toDate)
+                .GroupBy(x => new { x.MaHang, x.TenHang })
+                .Select(g => new
+                {
+                    g.Key.MaHang,
+                    g.Key.TenHang,
+                    TonTruoc = g.Max(x => x.SoLuongTonTruoc),
+                    SoLuongNhap = g.Sum(x => x.SoLuongNhap)
+                });
+
+            var ids = context.Orders.Where(x => x.OrderDate >= fromDate && x.OrderDate <= toDate).Select(x => x.OrderId).ToList();
+            var xuat = context.OrderDetails
+                .Where(x => ids.Contains(x.OrderId))
+                .GroupBy(x => new { x.MaHang })
+                .Select(g => new
+                {
+                    g.Key.MaHang,
+                    SoLuongXuat = g.Sum(x => x.SoLuong)
+                });
+
+            var result = nhap
+                .GroupJoin(xuat, n => n.MaHang, x => x.MaHang,
+                    (n, xg) => new { n, xg })
+                .SelectMany(
+                    temp => temp.xg.DefaultIfEmpty(),
+                    (temp, x) => new InventoryReportItem
+                    {
+                        MaHang = temp.n.MaHang,
+                        TenHang = temp.n.TenHang,
+                        TonTruoc = temp.n.TonTruoc,
+                        SoLuongNhap = temp.n.SoLuongNhap,
+                        SoLuongXuat = (x == null) ? 0 : x.SoLuongXuat,
+                    })
+                .GroupBy(x => x.MaHang)
+                .Select(g => g.First()) // tránh trùng nếu nhiều dòng từ SelectMany
+                .ToList();
+
+            int stt = 1;
+            result.ForEach(x => x.STT = stt++);
+
+            return result;
+        }
+
+        public void ExportInventoryReportByDate(List<InventoryReportItem> items, DateTime fromDate, DateTime toDate)
+        {
+            ExcelPackage.License.SetNonCommercialPersonal("Jack Five Bulb");
+
+            using (var package = new ExcelPackage())
+            {
+                var ws = package.Workbook.Worksheets.Add("Báo cáo XNT");
+
+                int currentRow = 1;
+
+                // Header
+                ws.Cells[currentRow, 4].Value = "BÁO CÁO XNT HÀNG HOÁ";
+                ws.Cells[currentRow, 4].Style.Font.Size = 16;
+                ws.Cells[currentRow, 4].Style.Font.Bold = true;
+                currentRow += 2;
+
+                ws.Cells[currentRow, 5].Value = "Từ ngày:";
+                ws.Cells[currentRow, 6].Value = fromDate.ToString("dd/MM/yyyy");
+                currentRow++;
+                ws.Cells[currentRow, 5].Value = "Đến ngày:";
+                ws.Cells[currentRow, 6].Value = toDate.ToString("dd/MM/yyyy");
+                currentRow += 2;
+
+                var grouped = items
+                    .Where(x => x.CreatedTime.Date >= fromDate.Date && x.CreatedTime.Date <= toDate.Date)
+                    .GroupBy(x => x.CreatedTime.Date)
+                    .OrderBy(g => g.Key);
+
+                foreach (var group in grouped)
+                {
+                    // Ngày bán
+                    ws.Cells[currentRow, 2].Value = $"Ngày bán: {group.Key:dd/MM/yyyy}";
+                    ws.Cells[currentRow, 2].Style.Font.Bold = true;
+                    ws.Cells[currentRow, 2].Style.Font.Color.SetColor(System.Drawing.Color.Red);
+                    currentRow++;
+
+                    // Header columns
+                    ws.Cells[currentRow, 2].Value = "#";
+                    ws.Cells[currentRow, 3].Value = "Mã Hàng";
+                    ws.Cells[currentRow, 4].Value = "Tên Hàng";
+                    ws.Cells[currentRow, 5].Value = "Số Lượng Tồn Trước";
+                    ws.Cells[currentRow, 6].Value = "Số Lượng Nhập";
+                    ws.Cells[currentRow, 7].Value = "Số Lượng Tồn Sau";
+                    ws.Cells[currentRow, 8].Value = "Số Lượng Xuất";
+                    ws.Cells[currentRow, 2, currentRow, 8].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    ws.Cells[currentRow, 2, currentRow, 8].Style.Font.Bold = true;
+                    currentRow++;
+
+                    int stt = 1;
+                    foreach (var item in group)
+                    {
+                        ws.Cells[currentRow, 2].Value = stt++;
+                        ws.Cells[currentRow, 3].Value = item.MaHang;
+                        ws.Cells[currentRow, 4].Value = item.TenHang;
+                        ws.Cells[currentRow, 5].Value = item.TonTruoc;
+                        ws.Cells[currentRow, 6].Value = item.SoLuongNhap;
+                        ws.Cells[currentRow, 7].Value = item.TonSau;
+                        ws.Cells[currentRow, 8].Value = item.SoLuongXuat;
+
+                        ws.Cells[currentRow, 2, currentRow, 8].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        currentRow++;
+                    }
+
+                    currentRow += 2;
+                }
+
+                // Auto-fit columns
+                ws.Cells[1, 1, currentRow, 8].AutoFitColumns();
+
+                // Lưu file
+                using var saveDialog = new SaveFileDialog
+                {
+                    Filter = "Excel files (*.xlsx)|*.xlsx",
+                    FileName = $"BaoCaoXNTHangHoa-{DateTimeOffset.Now.ToUnixTimeSeconds()}.xlsx"
+                };
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllBytes(saveDialog.FileName, package.GetAsByteArray());
+                    MessageBox.Show("Xuất báo cáo thành công!");
+                }
+            }
+        }
+
+
         private void XuatBaoCaoXuatNhapTon()
         {
-            throw new NotImplementedException();
+            var fromDate = dtpFrom.Value.Date;
+            var toDate = dtpTo.Value.Date.AddDays(1).AddTicks(-1);
+            var reportData = GetInventoryReport(fromDate, toDate);
+            ExportInventoryReportByDate(reportData, fromDate, toDate);
         }
 
         private void XuatBaoCaoBanHang()
