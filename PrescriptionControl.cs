@@ -26,6 +26,9 @@ namespace InventoryApp
 
         public PrescriptionControl(InventoryAppDbContext dbContext)
         {
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
             InitializeComponent();
             appDbContext = dbContext;
 

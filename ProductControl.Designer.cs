@@ -11,20 +11,6 @@
             base.Dispose(disposing);
         }
 
-        private void btnThem_Click(object sender, EventArgs e)
-        {
-            var form = new ProductForm();
-            if (form.ShowDialog() == DialogResult.OK)
-            {
-                // Ví dụ: lấy dữ liệu
-                string name = form.ProductName;
-                decimal salePrice = form.SalePrice;
-
-                MessageBox.Show($"Thêm sản phẩm: {name} - Giá bán: {salePrice}");
-                // TODO: Gọi DB.Save hoặc thêm vào DataGridView
-            }
-        }
-
         private void InitializeComponent()
         {
             dgvProducts = new DataGridView();
@@ -244,6 +230,7 @@
             btnDownFileMau.TabIndex = 16;
             btnDownFileMau.TextAlignment = StringAlignment.Center;
             btnDownFileMau.TextOffset = new Point(0, 0);
+            btnDownFileMau.Click += btnDownFileMau_Click;
             // 
             // ProductControl
             // 

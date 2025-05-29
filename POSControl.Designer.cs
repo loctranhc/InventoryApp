@@ -24,7 +24,9 @@ namespace InventoryApp
         public POSControl(InventoryAppDbContext dbContext)
         {
             context = dbContext;
-
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
             InitializeComponent();
             InitOrderTable(new List<OrderDetail>());
             AutoCompleteStringCollection autoCompleteData = new AutoCompleteStringCollection();
@@ -120,6 +122,7 @@ namespace InventoryApp
             try
             {
                 order.UserNo = UserSession.CurrentUser.UserNo;
+                order.MaNhanVien = lblValueMaKhach.Text.Trim();
             }
             catch (Exception ex)
             {
@@ -407,7 +410,11 @@ namespace InventoryApp
             //section.AddParagraph("www.bachhoaxanh.com", "Normal").Format.Alignment = ParagraphAlignment.Center;
             section.AddParagraph("CFVP+Q7W, ĐT749B, Minh Hoà, Dầu Tiếng, Bình Dương, Việt Nam", "Normal").Format.Alignment = ParagraphAlignment.Center;
 
-            section.AddParagraph("\nPHIẾU THANH TOÁN", "Normal").Format.Alignment = ParagraphAlignment.Center;
+            var title = section.AddParagraph("\nPHIẾU THANH TOÁN");
+            title.Format.Alignment = ParagraphAlignment.Center;
+            title.Format.Font.Bold = true;
+            title.Format.Font.Size = 16;
+
             section.AddParagraph("\nHoá đơn số: " + order.OrderNo);
             section.AddParagraph("Ngày lập hoá đơn: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
             section.AddParagraph("Mã nhân viên: " + order.UserNo);
@@ -427,7 +434,7 @@ namespace InventoryApp
 
             var headerRow = table.AddRow();
             headerRow.Cells[0].AddParagraph("Tên Sản Phẩm");
-            headerRow.Cells[1].AddParagraph("SL");
+            headerRow.Cells[1].AddParagraph("Số Lượng");
             headerRow.Cells[2].AddParagraph("Đơn Giá");
             headerRow.Cells[3].AddParagraph("T.Tiền");
 
@@ -436,8 +443,8 @@ namespace InventoryApp
                 var row = table.AddRow();
                 row.Cells[0].AddParagraph(item.TenHang);
                 row.Cells[1].AddParagraph(item.SoLuong.ToString("0.##"));
-                row.Cells[2].AddParagraph(item.GiaBan.ToString("N0"));
-                row.Cells[3].AddParagraph((item.SoLuong * item.GiaBan).ToString("N0"));
+                row.Cells[2].AddParagraph((item.GiaBan/item.SoLuong).ToString("N0"));
+                row.Cells[3].AddParagraph((item.GiaBan).ToString("N0"));
             }
 
             section.AddParagraph("\nGiảm giá: " + txtGiamGia.Value + "%");
@@ -496,7 +503,7 @@ namespace InventoryApp
 
             section.AddParagraph("\nTổng cộng: " + total.ToString("N0") + " VNĐ");
 
-            string filename = "hoa_don_ban_hang.pdf";
+            string filename = $"hoa_don_ban_hang_{DateTimeOffset.Now.ToUnixTimeSeconds()}.pdf";
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(true);
             renderer.Document = doc;
             renderer.RenderDocument();

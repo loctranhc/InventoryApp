@@ -150,6 +150,7 @@
             btnSuaToaThuoc.TabIndex = 30;
             btnSuaToaThuoc.TextAlignment = StringAlignment.Center;
             btnSuaToaThuoc.TextOffset = new Point(0, 0);
+            btnSuaToaThuoc.Click += btnSuaToaThuoc_Click;
             // 
             // ToaThuocMauControl
             // 

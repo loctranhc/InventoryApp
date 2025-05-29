@@ -20,6 +20,7 @@ namespace InventoryApp
         private readonly InventoryAppDbContext dbContext;
         private BindingList<PrescriptionDetail> details = new BindingList<PrescriptionDetail>();
         private List<Medicine> medicines = new List<Medicine>();
+        private readonly string _frmStyle = "";
 
         public ThongTinDonThuocMau(InventoryAppDbContext Context)
         {
@@ -34,6 +35,34 @@ namespace InventoryApp
             autoCompleteStringCollection.AddRange(dbContext.Medicines.Select(x => x.TenThuoc).ToArray());
             autoCompleteStringCollection.AddRange(dbContext.Medicines.Select(x => x.MaThuoc).ToArray());
             txtTimKiemThuoc.AutoCompleteCustomSource = autoCompleteStringCollection;
+        }
+
+        public ThongTinDonThuocMau(InventoryAppDbContext Context, Prescription prescription, string FormStyle = "Edit")
+        {
+            InitializeComponent();
+            dbContext = Context;
+            LoadChITiet(details);
+            richTextBox1.ReadOnly = true;
+            txtLieuDung.Text = "1";
+            txtSoLuong.Text = "1";
+            _frmStyle = FormStyle;
+
+            AutoCompleteStringCollection autoCompleteStringCollection = new AutoCompleteStringCollection();
+            autoCompleteStringCollection.AddRange(dbContext.Medicines.Select(x => x.TenThuoc).ToArray());
+            autoCompleteStringCollection.AddRange(dbContext.Medicines.Select(x => x.MaThuoc).ToArray());
+            txtTimKiemThuoc.AutoCompleteCustomSource = autoCompleteStringCollection;
+
+            var chiTiet = dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == prescription.Id).ToList();
+            foreach (var item in chiTiet)
+            {
+                details.Add(item);
+                var thuoc = dbContext.Medicines.FirstOrDefault(X => X.MaThuoc == item.MaThuoc);
+                if (thuoc != null)
+                    medicines.Add(thuoc);
+            }
+            
+            txtTenDonThuoc.Text = prescription.TenDonThuoc;
+            LoadChITiet(details);
         }
 
         private void LoadChITiet(BindingList<PrescriptionDetail> details)
@@ -136,8 +165,15 @@ namespace InventoryApp
             var currentSelected = btnThemThuoc.Tag as Medicine;
             var exist = medicines.FirstOrDefault(x => x.MaThuoc == currentSelected.MaThuoc);
 
-            if (exist is null && currentSelected != null)
+            if (currentSelected != null)
             {
+                if(exist is not null)
+                {
+                    medicines.Remove(exist);
+                    var exists = details.FirstOrDefault(x => x.MaThuoc == currentSelected.MaThuoc);
+                    details.Remove(exists);
+                }
+
                 var maNhanVien = "";
                 try
                 {
@@ -179,6 +215,7 @@ namespace InventoryApp
                     details.Remove(thuoc);
 
                 LoadChITiet(details);
+                return;
             }
 
             if (dgvDonThuoc.SelectedRows.Count > 0)
@@ -222,6 +259,29 @@ namespace InventoryApp
             var toaThuoc = dbContext.Prescriptions.FirstOrDefault(x => x.TenDonThuoc.ToLower() == txtTenDonThuoc.Text.ToLower());
             if (toaThuoc is not null)
             {
+                if (_frmStyle.Equals("Edit"))
+                {
+                    var chiTietToaThuoc = dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == toaThuoc.Id).ToList();
+                    dbContext.RemoveRange(chiTietToaThuoc);
+
+                    dbContext.PrescriptionDetails.AddRange(details.Select(x => new PrescriptionDetail
+                    {
+                        LieuDung = x.LieuDung,
+                        MaKH = x.MaKH,
+                        MaNhanVien = x.MaNhanVien,
+                        MaThuoc = x.MaThuoc,
+                        PrescriptionId = toaThuoc.Id,
+                        SoLuong = x.SoLuong,
+                        TenThuoc = x.TenThuoc
+                    }));
+                    dbContext.SaveChanges();
+                    MessageBox.Show("Lưu thành công!", "Thông báo");
+                    this.Tag = toaThuoc;
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                    return;
+                }
+
                 MessageBox.Show("Tên toa thuốc đã được sử dụng.", "Thông báo");
                 return;
             }
@@ -258,7 +318,8 @@ namespace InventoryApp
         private void txtLieuDung_TextChanged(object sender, EventArgs e)
         {
             var lieuDung = 0;
-            if (int.TryParse(txtLieuDung.Text, out lieuDung)){
+            if (int.TryParse(txtLieuDung.Text, out lieuDung))
+            {
                 return;
             }
             else

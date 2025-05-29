@@ -12,25 +12,28 @@ namespace InventoryApp
 
         public MainForm(InventoryAppDbContext dbContext)
         {
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
             InitializeComponent();
             InitMenuButtons();
             context = dbContext;
             this.FormBorderStyle = FormBorderStyle.Sizable;
-            LoadControl(new HomePage());
+            ShowLoadingThenLoad(() => LoadControl(new POSControl(dbContext)));
 
             // Gán sự kiện Click cho các nút
             //btnDashboard.Click += (s, e) => LoadControl(new HomePage());
-            btnCategory.Click += (s, e) => LoadControl(new CategoryControl(context));
-            btnProducts.Click += (s, e) => LoadControl(new ProductControl(context));
-            btnInventory.Click += (s, e) => LoadControl(new InventoryControl(dbContext));
-            btnPOS.Click += (s, e) => LoadControl(new POSControl(dbContext));
-            btnPrescription.Click += (s, e) => LoadControl(new PrescriptionControl(dbContext));
-            btnMedicine.Click += (s, e) => LoadControl(new MedicineControl(dbContext));
-            //btnInvoices.Click += (s, e) => LoadControl(new InvoiceControl());
-            btnCustomers.Click += (s, e) => LoadControl(new CustomerControl(dbContext));
-            btnUsers.Click += (s, e) => LoadControl(new EmployeeControl(dbContext));
-            btnToaThuocMau.Click += (s, e) => LoadControl(new ToaThuocMauControl(dbContext));
-            btnReports.Click += (s, e) => LoadControl(new ThongKeBaoCaoControl(dbContext));
+            btnCategory.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new CategoryControl(context)));
+            btnProducts.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new ProductControl(context)));
+            btnInventory.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new InventoryControl(dbContext)));
+            btnPOS.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new POSControl(dbContext)));
+            btnPrescription.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new PrescriptionControl(dbContext)));
+            btnMedicine.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new MedicineControl(dbContext)));
+            btnInvoices.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new HoaDonToaThuoc(dbContext)));
+            btnCustomers.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new CustomerControl(dbContext)));
+            btnUsers.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new EmployeeControl(dbContext)));
+            btnToaThuocMau.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new ToaThuocMauControl(dbContext)));
+            btnReports.Click += (s, e) => ShowLoadingThenLoad(() => LoadControl(new ThongKeBaoCaoControl(dbContext)));
             //btnBackup.Click += (s, e) => LoadControl(new BackupControl());
         }
 
@@ -41,15 +44,22 @@ namespace InventoryApp
             panelMain.Controls.Add(control);
         }
 
+        private async void ShowLoadingThenLoad(Action loadAction)
+        {
+            LoadControl(new panelLoading());
+            await Task.Delay(500);
+            loadAction();
+        }
+
         private void InitMenuButtons()
         {
             Button[] buttons = {
-                btnDashboard, btnPOS, btnPrescription, btnToaThuocMau, btnCategory, btnProducts, btnMedicine, btnInvoices,
+                btnPOS, btnPrescription, btnToaThuocMau, btnCategory, btnProducts, btnMedicine, btnInvoices,
                 btnCustomers, btnUsers, btnReports
             };
 
             string[] texts = {
-                "DASHBOARD", "BÁN HÀNG", "BÁN THUỐC", "TOA THUỐC MẪU", "DANH MỤC", "QUẢN LÝ SẢN PHẨM", "QUẢN LÝ THUỐC", "HOÁ ĐƠN/TOA THUỐC",
+                "BÁN HÀNG", "BÁN THUỐC", "TOA THUỐC MẪU", "DANH MỤC", "QUẢN LÝ SẢN PHẨM", "QUẢN LÝ THUỐC", "HOÁ ĐƠN/TOA THUỐC",
                 "DS KHÁCH HÀNG", "DS NHÂN VIÊN", "THỐNG KÊ/BÁO CÁO"
             };
 

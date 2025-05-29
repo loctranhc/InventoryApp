@@ -46,6 +46,7 @@
             btnAdd.TabIndex = 3;
             btnAdd.Text = "Thêm";
             btnAdd.UseVisualStyleBackColor = false;
+            btnAdd.Click += btnAdd_Click_1;
             // 
             // btnEdit
             // 
@@ -58,6 +59,7 @@
             btnEdit.TabIndex = 4;
             btnEdit.Text = "Sửa";
             btnEdit.UseVisualStyleBackColor = false;
+            btnEdit.Click += btnEdit_Click_1;
             // 
             // btnDelete
             // 
@@ -70,6 +72,7 @@
             btnDelete.TabIndex = 5;
             btnDelete.Text = "Xóa";
             btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click;
             // 
             // txtTimKiem
             // 

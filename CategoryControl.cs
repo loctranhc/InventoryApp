@@ -57,5 +57,21 @@ namespace InventoryApp
             gridViewCategory.GridColor = Color.LightGray;
             gridViewCategory.BackgroundColor = Color.White;
         }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtTenDanhMuc.Content.Trim()))
+            {
+                dbContext.Categories.Add(new Category
+                {
+                    MoTa = string.IsNullOrEmpty(richTextBox1.Text) ? "N/A" : richTextBox1.Text,
+                    TenNhapHang = txtTenDanhMuc.Content.Trim(),
+                    TenNhomHang = txtTenDanhMuc.Content.Trim()
+                });
+                dbContext.SaveChanges();
+                LoadDanhMuc(dbContext.Categories.ToList());
+                MessageBox.Show($"Đã tạo danh mục {txtTenDanhMuc.Content.Trim()}", "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
 }

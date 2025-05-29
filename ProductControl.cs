@@ -172,5 +172,45 @@ namespace InventoryApp
         {
 
         }
+
+        private void btnDownFileMau_Click(object sender, EventArgs e)
+        {
+            string sourcePath = Path.Combine(Application.StartupPath, "MauBangGia.xlsx");
+
+            if (!File.Exists(sourcePath))
+            {
+                MessageBox.Show("Không tìm thấy file mẫu.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (SaveFileDialog saveDialog = new SaveFileDialog())
+            {
+                saveDialog.Title = "Lưu file mẫu bảng giá";
+                saveDialog.Filter = "Excel files (*.xlsx)|*.xlsx";
+                saveDialog.FileName = "MauBangGia.xlsx";
+
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        File.Copy(sourcePath, saveDialog.FileName, true);
+                        MessageBox.Show("Lưu file thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi lưu file: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            var productForm = new ProductForm(_dbContext);
+            if(productForm.ShowDialog() == DialogResult.OK)
+            {
+                LoadSanPham(_dbContext.Products.ToList());
+            }
+        }
     }
 }

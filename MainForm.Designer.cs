@@ -57,7 +57,6 @@
             panelMenu.Controls.Add(btnToaThuocMau);
             panelMenu.Controls.Add(btnPrescription);
             panelMenu.Controls.Add(btnPOS);
-            panelMenu.Controls.Add(btnDashboard);
             panelMenu.Dock = DockStyle.Left;
             panelMenu.Location = new Point(0, 0);
             panelMenu.Name = "panelMenu";

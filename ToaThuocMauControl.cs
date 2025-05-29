@@ -163,10 +163,31 @@ namespace InventoryApp
         private void btnThem_Click(object sender, EventArgs e)
         {
             ThongTinDonThuocMau thongTinDonThuocMau = new ThongTinDonThuocMau(dbContext);
-            if (thongTinDonThuocMau.ShowDialog() == DialogResult.OK) {
+            if (thongTinDonThuocMau.ShowDialog() == DialogResult.OK)
+            {
                 var toaThuoc = thongTinDonThuocMau.Tag as Prescription;
                 LoadDanhSachToa(new List<Prescription> { toaThuoc });
                 LoadChITiet(dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == toaThuoc.Id).ToList());
+            }
+        }
+
+        private void btnSuaToaThuoc_Click(object sender, EventArgs e)
+        {
+            if (dgvDonThuocMau.SelectedRows.Count > 0)
+            {
+                DataGridViewRow selectedRow = dgvDonThuocMau.SelectedRows[0];
+                var maDonThuoc = selectedRow.Cells["MaDonThuoc"].Value?.ToString();
+                var donThuoc = dbContext.Prescriptions.FirstOrDefault(x => x.MaDonThuoc == maDonThuoc.Trim());
+                ThongTinDonThuocMau thongTinDonThuocMau = new ThongTinDonThuocMau(dbContext, prescription: donThuoc);
+                if (thongTinDonThuocMau.ShowDialog() == DialogResult.OK)
+                {
+                    var toaThuoc = thongTinDonThuocMau.Tag as Prescription;
+                    LoadDanhSachToa(new List<Prescription> { toaThuoc });
+                    LoadChITiet(dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == toaThuoc.Id).ToList());
+                }
+            }
+            else{
+                MessageBox.Show("Vui lòng chọn toa thuốc cần sửa.", "Thông báo");
             }
         }
     }

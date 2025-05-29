@@ -1,137 +1,101 @@
-﻿namespace InventoryApp
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using DocumentFormat.OpenXml.InkML;
+using MigrateDatabase;
+using MigrateDatabase.Models;
+
+namespace InventoryApp
 {
     public partial class ProductForm : Form
     {
-        public ProductForm()
+        private InventoryAppDbContext AppDbContext;
+
+        public ProductForm(InventoryAppDbContext inventoryAppDbContext)
         {
             InitializeComponent();
-            InitFormLayout();
-        }
+            AppDbContext = inventoryAppDbContext;
 
-        private void AddLabel(string text, int x, int y)
-        {
-            var lbl = new Label
+            if (AppDbContext.Categories.FirstOrDefault(x => x.TenNhapHang == "N/A") == null)
             {
-                Text = text,
-                Location = new Point(x, y + 4),
-                AutoSize = true
-            };
-            this.Controls.Add(lbl);
-        }
-
-        private void InitFormLayout()
-        {
-            this.Text = "Thêm / Sửa sản phẩm";
-            this.ClientSize = new Size(700, 450);
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.MaximizeBox = false;
-
-            int labelX = 20, inputX = 150, rowY = 20, gap = 35;
-
-            AddLabel("Mã sản phẩm (SKU):", labelX, rowY);
-            txtSKU.Location = new Point(inputX, rowY);
-            txtSKU.Width = 200;
-
-            rowY += gap;
-            AddLabel("Tên sản phẩm:", labelX, rowY);
-            txtName.Location = new Point(inputX, rowY);
-            txtName.Width = 300;
-
-            rowY += gap;
-            AddLabel("Mô tả:", labelX, rowY);
-            txtDescription.Location = new Point(inputX, rowY);
-            txtDescription.Width = 300;
-
-            rowY += gap;
-            AddLabel("Đơn vị tính:", labelX, rowY);
-            txtUnit.Location = new Point(inputX, rowY);
-            txtUnit.Width = 100;
-
-            rowY += gap;
-            AddLabel("Giá nhập:", labelX, rowY);
-            nudPurchase.Location = new Point(inputX, rowY);
-            nudPurchase.Maximum = 1000000;
-
-            rowY += gap;
-            AddLabel("Giá bán:", labelX, rowY);
-            nudSale.Location = new Point(inputX, rowY);
-            nudSale.Maximum = 1000000;
-
-            rowY += gap;
-            AddLabel("Số lượng tồn kho:", labelX, rowY);
-            nudQuantity.Location = new Point(inputX, rowY);
-            nudQuantity.Maximum = 10000;
-
-            rowY += gap;
-            AddLabel("Danh mục:", labelX, rowY);
-            cbCategory.Location = new Point(inputX, rowY);
-            cbCategory.Width = 200;
-            cbCategory.Items.AddRange(new object[] { "Đồ uống", "Thực phẩm", "Thiết bị", "Khác" });
-
-            rowY += gap;
-            AddLabel("Hình ảnh:", labelX, rowY);
-            txtImagePath.Location = new Point(inputX, rowY);
-            txtImagePath.Width = 200;
-
-            btnChooseImage.Text = "...";
-            btnChooseImage.Location = new Point(inputX + 210, rowY);
-            btnChooseImage.Click += btnChooseImage_Click;
-
-            pictureBox.Location = new Point(470, 20);
-            pictureBox.Size = new Size(150, 150);
-            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-            btnSave.Text = "Lưu";
-            btnSave.Location = new Point(250, rowY + 50);
-            btnSave.Click += btnSave_Click;
-
-            btnCancel.Text = "Hủy";
-            btnCancel.Location = new Point(330, rowY + 50);
-            btnCancel.Click += btnCancel_Click;
-
-            this.Controls.AddRange(new Control[]
-            {
-                txtSKU, txtName, txtDescription, txtUnit,
-                nudPurchase, nudSale, nudQuantity, cbCategory,
-                txtImagePath, btnChooseImage, pictureBox,
-                btnSave, btnCancel
-            });
-        }
-
-        public string ProductName => txtName.Text;
-        public string SKU => txtSKU.Text;
-        public string Description => txtDescription.Text;
-        public string Unit => txtUnit.Text;
-        public decimal PurchasePrice => nudPurchase.Value;
-        public decimal SalePrice => nudSale.Value;
-        public int Quantity => (int)nudQuantity.Value;
-        public string Category => cbCategory.Text;
-        public string ImagePath => txtImagePath.Text;
-
-        private void btnChooseImage_Click(object sender, EventArgs e)
-        {
-            using OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Image files (*.jpg;*.png)|*.jpg;*.png";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                txtImagePath.Text = ofd.FileName;
-                pictureBox.ImageLocation = ofd.FileName;
+                AppDbContext.Categories.Add(new MigrateDatabase.Models.Category
+                {
+                    MoTa = "Nhóm hàng mặc định",
+                    TenNhapHang = "N/A",
+                    TenNhomHang = "N/A"
+                });
+                AppDbContext.SaveChanges();
             }
+            var categories = AppDbContext.Categories.Select(X => X.TenNhomHang).ToList<string>();
+            foreach (var item in categories)
+                comboBox1.Items.Add(item);
+            comboBox1.Text = "None";
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // (Bạn có thể thêm validate ở đây)
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private bool ValidateInputs()
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            if (string.IsNullOrWhiteSpace(txtTenHang.Text) ||
+                string.IsNullOrWhiteSpace(txtDonViTinh.Text) ||
+                string.IsNullOrWhiteSpace(txtSoLuongNhap.Text) ||
+                string.IsNullOrWhiteSpace(comboBox1.Text) ||
+                string.IsNullOrWhiteSpace(txtGiaVon.Text) ||
+                string.IsNullOrWhiteSpace(txtGiaNhap.Text) ||
+                string.IsNullOrWhiteSpace(txtGiaBan.Text))
+            {
+                MessageBox.Show("Vui lòng điền đầy đủ thông tin!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (!int.TryParse(txtSoLuongNhap.Text, out _) ||
+                !decimal.TryParse(txtGiaVon.Text, out _) ||
+                !decimal.TryParse(txtGiaNhap.Text, out _) ||
+                !decimal.TryParse(txtGiaBan.Text, out _))
+            {
+                MessageBox.Show("Số lượng và giá trị phải là số hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return true;
+        }
+
+        private string GenerateMaHang()
+        {
+            var count = AppDbContext.Products.Count() + 1;
+            return $"SP{count:D5}"; // VD: SP00001
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (ValidateInputs())
+            {
+                var product = new Product();
+                product.MaHang = GenerateMaHang(); // bạn có thể tạo mã sản phẩm theo kiểu SP00001...
+                product.TenHang = txtTenHang.Text.Trim();
+                product.DonViTinh = txtDonViTinh.Text.Trim();
+                product.SoLuongTonKho = int.Parse(txtSoLuongNhap.Text.Trim());
+                product.CategoryId = AppDbContext.Categories.FirstOrDefault(x => x.TenNhapHang.ToLower().Equals(comboBox1.Text.Trim().ToLower())).Id;
+                product.GiaVon = decimal.Parse(txtGiaVon.Text.Trim());
+                product.GiaNhap = decimal.Parse(txtGiaNhap.Text.Trim());
+                product.GiaBan = decimal.Parse(txtGiaBan.Text.Trim());
+
+                AppDbContext.Products.Add(product);
+                AppDbContext.SaveChanges();
+
+                MessageBox.Show("Thêm sản phẩm thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
         }
     }
 }

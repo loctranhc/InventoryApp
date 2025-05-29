@@ -81,6 +81,7 @@
             btnThem.TabIndex = 1;
             btnThem.TextAlignment = StringAlignment.Center;
             btnThem.TextOffset = new Point(0, 0);
+            btnThem.Click += btnThem_Click;
             // 
             // txtTenDanhMuc
             // 
