@@ -47,11 +47,24 @@ namespace InventoryApp
             dgvOrderList.DataSource = _orderDetails;
 
             dgvOrderList.DataSource = details;
+            dgvOrderList.Columns["Id"].Visible = false;
             dgvOrderList.Columns["MaHang"].Visible = false;
             dgvOrderList.Columns["OrderId"].Visible = false;
             dgvOrderList.Columns["TenHang"].HeaderText = "Tên Hàng";
             dgvOrderList.Columns["SoLuong"].HeaderText = "Số Lượng";
             dgvOrderList.Columns["GiaBan"].HeaderText = "Tạm Tính (VNĐ)";
+
+            // Tạo mới cột button
+            DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
+            btnColumn.HeaderText = "Thao Tác";
+            btnColumn.Text = "Xoá";
+            btnColumn.Name = "btnXoa";
+            btnColumn.UseColumnTextForButtonValue = true;
+            if (!dgvOrderList.Columns.Contains("btnXoa"))
+            {
+                dgvOrderList.Columns.Add(btnColumn);
+            }
+
             dgvOrderList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvOrderList.AllowUserToAddRows = false;
             dgvOrderList.ReadOnly = false;
@@ -154,6 +167,27 @@ namespace InventoryApp
         private void dgvOrderList_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             InitOrderTable(details);
+        }
+
+        private void dgvOrderList_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dgvOrderList.Columns[e.ColumnIndex].Name == "btnXoa")
+            {
+                var row = dgvOrderList.Rows[e.RowIndex];
+                var maHang = row.Cells["MaHang"].Value?.ToString();
+
+                var detail = details.FirstOrDefault(x => x.MaHang == maHang);
+                if (detail is not null) {
+                    details.Remove(detail);
+                    var product = currentOrder.FirstOrDefault(x => x.MaHang == detail.MaHang);
+                    if (product is not null)
+                        currentOrder.Remove(product);
+                }
+
+                total = TongTien();
+                lblTotal.Text = $"Tạm tính hiện tại: {total:N0} VNĐ";
+                InitOrderTable(details);
+            }
         }
 
         private void dgvOrderList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -416,7 +450,7 @@ namespace InventoryApp
             section.AddParagraph("\nLưu ý: Hóa đơn chỉ xuất trong ngày. Quý khách vui lòng liên hệ thu ngân để được hỗ trợ.");
 
             // Tạo PDF
-            string filename = "hoa_don_ban_hang.pdf";
+            string filename = $"hoa_don_ban_hang_{DateTimeOffset.Now.ToUnixTimeSeconds()}.pdf";
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(true);
             renderer.Document = doc;
             renderer.RenderDocument();

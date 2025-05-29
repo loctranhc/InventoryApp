@@ -35,6 +35,7 @@
             label2 = new Label();
             cbxCategory = new ComboBox();
             txtTimKiem = new TextBox();
+            btnDownFileMau = new CuoreUI.Controls.cuiButton();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             SuspendLayout();
             // 
@@ -206,12 +207,51 @@
             txtTimKiem.Size = new Size(299, 33);
             txtTimKiem.TabIndex = 15;
             // 
+            // btnDownFileMau
+            // 
+            btnDownFileMau.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnDownFileMau.CheckButton = false;
+            btnDownFileMau.Checked = false;
+            btnDownFileMau.CheckedBackground = Color.FromArgb(255, 106, 0);
+            btnDownFileMau.CheckedForeColor = Color.White;
+            btnDownFileMau.CheckedImageTint = Color.White;
+            btnDownFileMau.CheckedOutline = Color.FromArgb(255, 106, 0);
+            btnDownFileMau.Content = "Download File Mẫu Nhập Hàng";
+            btnDownFileMau.DialogResult = DialogResult.None;
+            btnDownFileMau.Font = new Font("Microsoft Sans Serif", 9.75F);
+            btnDownFileMau.ForeColor = Color.White;
+            btnDownFileMau.HoverBackground = SystemColors.Window;
+            btnDownFileMau.HoveredImageTint = Color.White;
+            btnDownFileMau.HoverForeColor = Color.Black;
+            btnDownFileMau.HoverOutline = Color.FromArgb(32, 128, 128, 128);
+            btnDownFileMau.Image = null;
+            btnDownFileMau.ImageAutoCenter = true;
+            btnDownFileMau.ImageExpand = new Point(0, 0);
+            btnDownFileMau.ImageOffset = new Point(0, 0);
+            btnDownFileMau.Location = new Point(474, 106);
+            btnDownFileMau.Name = "btnDownFileMau";
+            btnDownFileMau.NormalBackground = Color.RoyalBlue;
+            btnDownFileMau.NormalForeColor = Color.White;
+            btnDownFileMau.NormalImageTint = Color.White;
+            btnDownFileMau.NormalOutline = Color.FromArgb(64, 128, 128, 128);
+            btnDownFileMau.OutlineThickness = 1F;
+            btnDownFileMau.PressedBackground = Color.WhiteSmoke;
+            btnDownFileMau.PressedForeColor = Color.FromArgb(32, 32, 32);
+            btnDownFileMau.PressedImageTint = Color.White;
+            btnDownFileMau.PressedOutline = Color.FromArgb(64, 128, 128, 128);
+            btnDownFileMau.Rounding = new Padding(8);
+            btnDownFileMau.Size = new Size(230, 34);
+            btnDownFileMau.TabIndex = 16;
+            btnDownFileMau.TextAlignment = StringAlignment.Center;
+            btnDownFileMau.TextOffset = new Point(0, 0);
+            // 
             // ProductControl
             // 
             AutoScaleMode = AutoScaleMode.Inherit;
             AutoSize = true;
             BackgroundImage = Properties.Resources.bg;
             BackgroundImageLayout = ImageLayout.Stretch;
+            Controls.Add(btnDownFileMau);
             Controls.Add(txtTimKiem);
             Controls.Add(cbxCategory);
             Controls.Add(label2);
@@ -234,5 +274,6 @@
         private Label label2;
         private ComboBox cbxCategory;
         private TextBox txtTimKiem;
+        private CuoreUI.Controls.cuiButton btnDownFileMau;
     }
 }

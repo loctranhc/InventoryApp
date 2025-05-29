@@ -261,6 +261,8 @@ namespace InventoryApp
             dgvOrderList.ReadOnly = true;
             dgvOrderList.Size = new Size(580, 270);
             dgvOrderList.TabIndex = 1;
+            dgvOrderList.CellClick += dgvOrderList_CellClick;
+            dgvOrderList.CellContentClick += dgvOrderList_CellContentClick;
             dgvOrderList.CellEndEdit += dgvOrderList_CellEndEdit;
             dgvOrderList.CellFormatting += dgvOrderList_CellFormatting;
             dgvOrderList.CellValueChanged += dgvOrderList_CellValueChanged;
@@ -637,5 +639,12 @@ namespace InventoryApp
         {
 
         }
+
+        private void dgvOrderList_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+
     }
 }

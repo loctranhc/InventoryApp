@@ -3,11 +3,7 @@
     public partial class RevenueReportForm
     {
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.DateTimePicker dtpFrom;
-        private System.Windows.Forms.DateTimePicker dtpTo;
         private System.Windows.Forms.Button btnViewReport;
-        private System.Windows.Forms.Label lblTotalRevenue;
-        private System.Windows.Forms.DataGridView dgvRevenue;
         private System.Windows.Forms.Label lblFrom;
         private System.Windows.Forms.Label lblTo;
 
@@ -19,75 +15,80 @@
 
         private void InitializeComponent()
         {
-            this.dtpFrom = new System.Windows.Forms.DateTimePicker();
-            this.dtpTo = new System.Windows.Forms.DateTimePicker();
-            this.btnViewReport = new System.Windows.Forms.Button();
-            this.lblTotalRevenue = new System.Windows.Forms.Label();
-            this.dgvRevenue = new System.Windows.Forms.DataGridView();
-            this.lblFrom = new System.Windows.Forms.Label();
-            this.lblTo = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvRevenue)).BeginInit();
-            this.SuspendLayout();
-
-            // dtpFrom
-            this.dtpFrom.Location = new System.Drawing.Point(90, 20);
-            this.dtpFrom.Name = "dtpFrom";
-            this.dtpFrom.Size = new System.Drawing.Size(200, 23);
-
-            // dtpTo
-            this.dtpTo.Location = new System.Drawing.Point(390, 20);
-            this.dtpTo.Name = "dtpTo";
-            this.dtpTo.Size = new System.Drawing.Size(200, 23);
-
+            btnViewReport = new Button();
+            lblFrom = new Label();
+            lblTo = new Label();
+            dtpTo = new DateTimePicker();
+            dtpFrom = new DateTimePicker();
+            SuspendLayout();
+            // 
             // btnViewReport
-            this.btnViewReport.Location = new System.Drawing.Point(610, 20);
-            this.btnViewReport.Name = "btnViewReport";
-            this.btnViewReport.Size = new System.Drawing.Size(100, 23);
-            this.btnViewReport.Text = "Xem báo cáo";
-            this.btnViewReport.UseVisualStyleBackColor = true;
-            this.btnViewReport.Click += new System.EventHandler(this.btnViewReport_Click);
-
-            // lblTotalRevenue
-            this.lblTotalRevenue.AutoSize = true;
-            this.lblTotalRevenue.Location = new System.Drawing.Point(30, 60);
-            this.lblTotalRevenue.Size = new System.Drawing.Size(130, 15);
-            this.lblTotalRevenue.Text = "Tổng doanh thu: 0 VNĐ";
-
-            // dgvRevenue
-            this.dgvRevenue.AllowUserToAddRows = false;
-            this.dgvRevenue.AllowUserToDeleteRows = false;
-            this.dgvRevenue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvRevenue.Location = new System.Drawing.Point(30, 90);
-            this.dgvRevenue.Name = "dgvRevenue";
-            this.dgvRevenue.ReadOnly = true;
-            this.dgvRevenue.RowTemplate.Height = 25;
-            this.dgvRevenue.Size = new System.Drawing.Size(740, 350);
-
+            // 
+            btnViewReport.BackColor = Color.OrangeRed;
+            btnViewReport.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            btnViewReport.ForeColor = SystemColors.Control;
+            btnViewReport.Location = new Point(256, 164);
+            btnViewReport.Name = "btnViewReport";
+            btnViewReport.Size = new Size(221, 57);
+            btnViewReport.TabIndex = 4;
+            btnViewReport.Text = "XUẤT EXCEL";
+            btnViewReport.UseVisualStyleBackColor = false;
+            btnViewReport.Click += btnViewReport_Click;
+            // 
             // lblFrom
-            this.lblFrom.AutoSize = true;
-            this.lblFrom.Location = new System.Drawing.Point(30, 24);
-            this.lblFrom.Text = "Từ ngày:";
-
+            // 
+            lblFrom.AutoSize = true;
+            lblFrom.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold);
+            lblFrom.Location = new Point(75, 60);
+            lblFrom.Name = "lblFrom";
+            lblFrom.Size = new Size(100, 24);
+            lblFrom.TabIndex = 0;
+            lblFrom.Text = "TỪ NGÀY";
+            // 
             // lblTo
-            this.lblTo.AutoSize = true;
-            this.lblTo.Location = new System.Drawing.Point(330, 24);
-            this.lblTo.Text = "Đến ngày:";
-
+            // 
+            lblTo.AutoSize = true;
+            lblTo.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold);
+            lblTo.Location = new Point(60, 103);
+            lblTo.Name = "lblTo";
+            lblTo.Size = new Size(116, 24);
+            lblTo.TabIndex = 1;
+            lblTo.Text = "ĐẾN NGÀY";
+            // 
+            // dtpTo
+            // 
+            dtpTo.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold);
+            dtpTo.Format = DateTimePickerFormat.Custom;
+            dtpTo.Location = new Point(181, 103);
+            dtpTo.Name = "dtpTo";
+            dtpTo.Size = new Size(296, 29);
+            dtpTo.TabIndex = 3;
+            // 
+            // dtpFrom
+            // 
+            dtpFrom.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold);
+            dtpFrom.Format = DateTimePickerFormat.Custom;
+            dtpFrom.Location = new Point(181, 55);
+            dtpFrom.Name = "dtpFrom";
+            dtpFrom.Size = new Size(296, 29);
+            dtpFrom.TabIndex = 5;
+            // 
             // RevenueReportForm
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.ClientSize = new System.Drawing.Size(800, 470);
-            this.Controls.Add(this.lblFrom);
-            this.Controls.Add(this.lblTo);
-            this.Controls.Add(this.dtpFrom);
-            this.Controls.Add(this.dtpTo);
-            this.Controls.Add(this.btnViewReport);
-            this.Controls.Add(this.lblTotalRevenue);
-            this.Controls.Add(this.dgvRevenue);
-            this.Name = "RevenueReportForm";
-            this.Text = "Báo cáo doanh thu";
-            ((System.ComponentModel.ISupportInitialize)(this.dgvRevenue)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            // 
+            BackgroundImage = Properties.Resources.bg;
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(553, 260);
+            Controls.Add(dtpFrom);
+            Controls.Add(lblFrom);
+            Controls.Add(lblTo);
+            Controls.Add(dtpTo);
+            Controls.Add(btnViewReport);
+            Name = "RevenueReportForm";
+            Text = "Báo cáo";
+            ResumeLayout(false);
+            PerformLayout();
         }
+        private DateTimePicker dtpTo;
+        private DateTimePicker dtpFrom;
     }
 }

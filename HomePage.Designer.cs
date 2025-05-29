@@ -32,12 +32,12 @@
             label2 = new Label();
             label1 = new Label();
             cuiPanel2 = new CuoreUI.Controls.cuiPanel();
-            cuiPanel3 = new CuoreUI.Controls.cuiPanel();
-            cuiChartLine1 = new CuoreUI.Controls.Charts.cuiChartLine();
-            label5 = new Label();
             label3 = new Label();
-            label6 = new Label();
+            label5 = new Label();
+            cuiPanel3 = new CuoreUI.Controls.cuiPanel();
             label4 = new Label();
+            label6 = new Label();
+            cuiChartLine1 = new CuoreUI.Controls.Charts.cuiChartLine();
             cuiPanel1.SuspendLayout();
             cuiPanel2.SuspendLayout();
             cuiPanel3.SuspendLayout();
@@ -93,6 +93,31 @@
             cuiPanel2.Size = new Size(225, 106);
             cuiPanel2.TabIndex = 1;
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.BackColor = Color.Transparent;
+            label3.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label3.ForeColor = SystemColors.HighlightText;
+            label3.Location = new Point(15, 52);
+            label3.Name = "label3";
+            label3.Size = new Size(97, 37);
+            label3.TabIndex = 2;
+            label3.Text = "43534";
+            label3.Click += label3_Click;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.BackColor = Color.Transparent;
+            label5.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.ForeColor = SystemColors.HighlightText;
+            label5.Location = new Point(15, 10);
+            label5.Name = "label5";
+            label5.Size = new Size(148, 25);
+            label5.TabIndex = 2;
+            label5.Text = "Tổng Đơn Hàng";
+            // 
             // cuiPanel3
             // 
             cuiPanel3.Controls.Add(label4);
@@ -105,6 +130,30 @@
             cuiPanel3.Rounding = new Padding(8);
             cuiPanel3.Size = new Size(236, 106);
             cuiPanel3.TabIndex = 2;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.BackColor = Color.Transparent;
+            label4.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label4.ForeColor = SystemColors.HighlightText;
+            label4.Location = new Point(20, 52);
+            label4.Name = "label4";
+            label4.Size = new Size(97, 37);
+            label4.TabIndex = 3;
+            label4.Text = "98865";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.BackColor = Color.Transparent;
+            label6.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label6.ForeColor = SystemColors.HighlightText;
+            label6.Location = new Point(20, 10);
+            label6.Name = "label6";
+            label6.Size = new Size(173, 25);
+            label6.TabIndex = 3;
+            label6.Text = "Tổng Lượng Khách";
             // 
             // cuiChartLine1
             // 
@@ -125,65 +174,16 @@
             cuiChartLine1.DayColor = Color.DarkGray;
             cuiChartLine1.Font = new Font("Microsoft YaHei UI", 8.25F);
             cuiChartLine1.GradientBackground = true;
-            cuiChartLine1.Location = new Point(21, 148);
+            cuiChartLine1.Location = new Point(22, 151);
             cuiChartLine1.Margin = new Padding(4, 3, 4, 3);
             cuiChartLine1.MaxValue = 100F;
             cuiChartLine1.Name = "cuiChartLine1";
             cuiChartLine1.PointColor = Color.FromArgb(255, 106, 0);
             cuiChartLine1.ShortDates = true;
-            cuiChartLine1.Size = new Size(764, 411);
+            cuiChartLine1.Size = new Size(931, 570);
             cuiChartLine1.TabIndex = 3;
             cuiChartLine1.UseBezier = false;
             cuiChartLine1.UsePercent = true;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.BackColor = Color.Transparent;
-            label5.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.ForeColor = SystemColors.HighlightText;
-            label5.Location = new Point(15, 10);
-            label5.Name = "label5";
-            label5.Size = new Size(148, 25);
-            label5.TabIndex = 2;
-            label5.Text = "Tổng Đơn Hàng";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.BackColor = Color.Transparent;
-            label3.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label3.ForeColor = SystemColors.HighlightText;
-            label3.Location = new Point(15, 52);
-            label3.Name = "label3";
-            label3.Size = new Size(97, 37);
-            label3.TabIndex = 2;
-            label3.Text = "43534";
-            label3.Click += label3_Click;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.BackColor = Color.Transparent;
-            label6.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label6.ForeColor = SystemColors.HighlightText;
-            label6.Location = new Point(20, 10);
-            label6.Name = "label6";
-            label6.Size = new Size(173, 25);
-            label6.TabIndex = 3;
-            label6.Text = "Tổng Lượng Khách";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.BackColor = Color.Transparent;
-            label4.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label4.ForeColor = SystemColors.HighlightText;
-            label4.Location = new Point(20, 52);
-            label4.Name = "label4";
-            label4.Size = new Size(97, 37);
-            label4.TabIndex = 3;
-            label4.Text = "98865";
             // 
             // HomePage
             // 
@@ -196,7 +196,7 @@
             Controls.Add(cuiPanel2);
             Controls.Add(cuiPanel1);
             Name = "HomePage";
-            Size = new Size(979, 589);
+            Size = new Size(979, 749);
             cuiPanel1.ResumeLayout(false);
             cuiPanel1.PerformLayout();
             cuiPanel2.ResumeLayout(false);

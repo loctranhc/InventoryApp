@@ -28,6 +28,7 @@ namespace InventoryApp
             LoadChITiet(details);
             richTextBox1.ReadOnly = true;
             txtLieuDung.Text = "1";
+            txtSoLuong.Text = "1";
 
             AutoCompleteStringCollection autoCompleteStringCollection = new AutoCompleteStringCollection();
             autoCompleteStringCollection.AddRange(dbContext.Medicines.Select(x => x.TenThuoc).ToArray());
@@ -47,6 +48,7 @@ namespace InventoryApp
             dgvDonThuoc.Columns["MaNhanVien"].Visible = false;
             dgvDonThuoc.Columns["MaThuoc"].HeaderText = "Mã Thuốc";
             dgvDonThuoc.Columns["TenThuoc"].HeaderText = "Tên Thuốc";
+            dgvDonThuoc.Columns["SoLuong"].HeaderText = "Số Lượng";
             dgvDonThuoc.Columns["LieuDung"].HeaderText = "Liều Dùng";
 
             dgvDonThuoc.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -109,16 +111,32 @@ namespace InventoryApp
 
         private void btnThemThuoc_Click(object sender, EventArgs e)
         {
+            try
+            {
+                int.Parse(txtSoLuong.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Vui lòng nhập số lượng!", "Thông báo");
+                return;
+            }
+
             if (string.IsNullOrEmpty(txtLieuDung.Text))
             {
                 MessageBox.Show("Phải chỉ định liều dùng.", "Thông báo");
                 return;
             }
 
+            if (string.IsNullOrEmpty(txtSoLuong.Text))
+            {
+                MessageBox.Show("Vui lòng nhập số lượng.", "Thông báo");
+                return;
+            }
+
             var currentSelected = btnThemThuoc.Tag as Medicine;
             var exist = medicines.FirstOrDefault(x => x.MaThuoc == currentSelected.MaThuoc);
 
-            if (exist is null)
+            if (exist is null && currentSelected != null)
             {
                 var maNhanVien = "";
                 try
@@ -138,6 +156,7 @@ namespace InventoryApp
                     MaKH = "KH-1",
                     MaThuoc = currentSelected.MaThuoc,
                     TenThuoc = currentSelected.TenThuoc,
+                    SoLuong = int.Parse(txtSoLuong.Text)
                 });
             }
 
@@ -153,7 +172,6 @@ namespace InventoryApp
         {
             if (e.RowIndex >= 0 && e.ColumnIndex == dgvDonThuoc.Columns["btnXoa"].Index)
             {
-                // Lấy thông tin khách hàng từ dòng được chọn
                 string maThuoc = dgvDonThuoc.Rows[e.RowIndex].Cells["MaThuoc"].Value?.ToString();
 
                 var thuoc = details.FirstOrDefault(x => x.MaThuoc == maThuoc);
@@ -161,6 +179,23 @@ namespace InventoryApp
                     details.Remove(thuoc);
 
                 LoadChITiet(details);
+            }
+
+            if (dgvDonThuoc.SelectedRows.Count > 0)
+            {
+                DataGridViewRow selectedRow = dgvDonThuoc.SelectedRows[0];
+                string maThuoc = selectedRow.Cells["MaThuoc"].Value?.ToString();
+                string lieuDung = selectedRow.Cells["LieuDung"].Value?.ToString().Split('/').First();
+                string soLuong = selectedRow.Cells["SoLuong"].Value?.ToString();
+                var thuoc = medicines.FirstOrDefault(x => x.MaThuoc == maThuoc);
+
+                if (thuoc != null)
+                {
+                    richTextBox1.Text = $"Tên thuốc: {thuoc.TenThuoc}\n\nHãng sản xuất: {thuoc.HangSanXuat}\nXuất xứ: {thuoc.NuocSanXuat}\nĐơn Vị Tính: {thuoc.DonViTinh}\nHàm lượng: {thuoc.HamLuong}";
+                    txtSoLuong.Text = soLuong;
+                    txtLieuDung.Text = lieuDung;
+                    btnThemThuoc.Tag = thuoc;
+                }
             }
         }
 

@@ -50,6 +50,7 @@ namespace InventoryApp
             dgvPrescriptionList.Columns["MaThuoc"].HeaderText = "Mã Thuốc";
             dgvPrescriptionList.Columns["TenThuoc"].HeaderText = "Tên Thuốc";
             dgvPrescriptionList.Columns["LieuDung"].HeaderText = "Liều Dùng";
+            dgvPrescriptionList.Columns["SoLuong"].HeaderText = "Số Lượng";
             dgvPrescriptionList.Columns["Id"].Visible = false;
             dgvPrescriptionList.Columns["PrescriptionId"].Visible = false;
             dgvPrescriptionList.Columns["MaKH"].Visible = false;
@@ -134,19 +135,22 @@ namespace InventoryApp
             table.Borders.Width = 0.5;
             table.AddColumn("6cm");
             table.AddColumn("3cm");
+            table.AddColumn("3cm");
             table.AddColumn("5cm");
 
             var headerRow = table.AddRow();
             headerRow.Shading.Color = Colors.LightGray;
             headerRow.Cells[0].AddParagraph("Tên thuốc");
-            headerRow.Cells[1].AddParagraph("Liều dùng");
-            headerRow.Cells[2].AddParagraph("Ghi chú");
+            headerRow.Cells[1].AddParagraph("Số Lượng");
+            headerRow.Cells[2].AddParagraph("Liều dùng");
+            headerRow.Cells[3].AddParagraph("Ghi chú");
 
             foreach (var medicine in currentPrescription)
             {
                 var row = table.AddRow();
                 row.Cells[0].AddParagraph(medicine.TenThuoc);
-                row.Cells[1].AddParagraph($"{medicine.LieuDung}/lần/ngày");
+                row.Cells[1].AddParagraph(medicine.SoLuong.ToString());
+                row.Cells[2].AddParagraph($"{medicine.LieuDung}/lần/ngày");
             }
 
             section.AddParagraph("\nLời dặn:  ..........................................");
@@ -162,7 +166,7 @@ namespace InventoryApp
             renderer.Document = doc;
             renderer.RenderDocument();
 
-            string filename = "don_thuoc.pdf";
+            string filename = $"don_thuoc_{DateTimeOffset.Now.ToUnixTimeSeconds()}.pdf";
             renderer.PdfDocument.Save(filename);
             Process.Start("explorer", filename);
         }
@@ -174,9 +178,24 @@ namespace InventoryApp
 
         private void btnAddCart_Click(object sender, EventArgs e)
         {
+            try
+            {
+                int.Parse(txtSoLuong.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Vui lòng nhập số lượng!", "Thông báo");
+                return;
+            }
+
             if (string.IsNullOrEmpty(txtLieuDung.Text))
             {
                 MessageBox.Show("Phải chỉ định liều dùng!", "Thông báo");
+                return;
+            }
+            if (string.IsNullOrEmpty(txtSoLuong.Text))
+            {
+                MessageBox.Show("Vui lòng nhập số lượng!", "Thông báo");
                 return;
             }
             var thuoc = btnAddCart.Tag as Medicine;
@@ -194,7 +213,8 @@ namespace InventoryApp
                     MaKH = lblValueMaKhach.Text,
                     MaNhanVien = UserSession.CurrentUser.UserNo,
                     MaThuoc = thuoc.MaThuoc,
-                    TenThuoc = thuoc.TenThuoc
+                    TenThuoc = thuoc.TenThuoc,
+                    SoLuong = int.Parse(txtSoLuong.Text),
                 });
                 currentMedicine.Add(thuoc);
 
@@ -342,7 +362,8 @@ namespace InventoryApp
                 MaKH = x.MaKH,
                 MaNhanVien = x.MaNhanVien,
                 MaThuoc = x.MaThuoc,
-                TenThuoc = x.TenThuoc
+                TenThuoc = x.TenThuoc,
+                SoLuong = x.SoLuong
             }));
 
             appDbContext.SaveChanges();
@@ -359,6 +380,7 @@ namespace InventoryApp
                 DataGridViewRow selectedRow = dgvPrescriptionList.SelectedRows[0];
                 string maThuoc = selectedRow.Cells["MaThuoc"].Value?.ToString();
                 string lieuDung = selectedRow.Cells["LieuDung"].Value?.ToString().Split('/').First();
+                string soLuong = selectedRow.Cells["SoLuong"].Value?.ToString();
                 var thuoc = currentMedicine.FirstOrDefault(x => x.MaThuoc == maThuoc);
 
                 if (thuoc != null)
@@ -366,6 +388,7 @@ namespace InventoryApp
                     lblTenHang.Text = thuoc.TenThuoc.ToString();
                     txtMoTa.Text = $"Hãng sản xuất: {thuoc.HangSanXuat}\nXuất xứ: {thuoc.NuocSanXuat}\nĐơn Vị Tính: {thuoc.DonViTinh}\nHàm lượng: {thuoc.HamLuong}";
                     txtLieuDung.Text = lieuDung;
+                    txtSoLuong.Text = soLuong;
                     btnAddCart.Tag = thuoc;
                 }
             }
@@ -380,12 +403,12 @@ namespace InventoryApp
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             var toaThuoc = appDbContext.Prescriptions.FirstOrDefault(x => x.TenDonThuoc.ToLower() == comboBox1.Text.ToLower());
-            if(toaThuoc is not null)
+            if (toaThuoc is not null)
             {
                 currentPrescription.Clear();
                 currentMedicine.Clear();
                 var chiTiet = appDbContext.PrescriptionDetails.Where(x => x.PrescriptionId == toaThuoc.Id).ToList();
-                foreach(var item in chiTiet)
+                foreach (var item in chiTiet)
                 {
                     currentPrescription.Add(item);
                     var thuoc = appDbContext.Medicines.FirstOrDefault(x => x.MaThuoc == item.MaThuoc);
@@ -394,6 +417,11 @@ namespace InventoryApp
 
                 InitPrescriptionTable(currentPrescription);
             }
+        }
+
+        private void dgvPrescriptionList_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

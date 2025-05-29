@@ -19,7 +19,7 @@ namespace InventoryApp
             LoadControl(new HomePage());
 
             // Gán sự kiện Click cho các nút
-            btnDashboard.Click += (s, e) => LoadControl(new HomePage());
+            //btnDashboard.Click += (s, e) => LoadControl(new HomePage());
             btnCategory.Click += (s, e) => LoadControl(new CategoryControl(context));
             btnProducts.Click += (s, e) => LoadControl(new ProductControl(context));
             btnInventory.Click += (s, e) => LoadControl(new InventoryControl(dbContext));
@@ -30,7 +30,7 @@ namespace InventoryApp
             btnCustomers.Click += (s, e) => LoadControl(new CustomerControl(dbContext));
             btnUsers.Click += (s, e) => LoadControl(new EmployeeControl(dbContext));
             btnToaThuocMau.Click += (s, e) => LoadControl(new ToaThuocMauControl(dbContext));
-            //btnReports.Click += (s, e) => LoadControl(new ReportControl());
+            btnReports.Click += (s, e) => LoadControl(new ThongKeBaoCaoControl(dbContext));
             //btnBackup.Click += (s, e) => LoadControl(new BackupControl());
         }
 
@@ -44,13 +44,13 @@ namespace InventoryApp
         private void InitMenuButtons()
         {
             Button[] buttons = {
-                btnDashboard, btnPOS, btnPrescription, btnToaThuocMau, btnCategory, btnProducts, btnMedicine, btnInventory, btnInvoices,
+                btnDashboard, btnPOS, btnPrescription, btnToaThuocMau, btnCategory, btnProducts, btnMedicine, btnInvoices,
                 btnCustomers, btnUsers, btnReports
             };
 
             string[] texts = {
-                "DASHBOARD", "BÁN HÀNG", "TOA THUỐC", "TOA THUỐC MẪU", "DANH MỤC", "SẢN PHẨM", "THUỐC", "TỒN KHO", "HOÁ ĐƠN",
-                "KHÁCH HÀNG", "NHÂN VIÊN", "BÁO CÁO"
+                "DASHBOARD", "BÁN HÀNG", "BÁN THUỐC", "TOA THUỐC MẪU", "DANH MỤC", "QUẢN LÝ SẢN PHẨM", "QUẢN LÝ THUỐC", "HOÁ ĐƠN/TOA THUỐC",
+                "DS KHÁCH HÀNG", "DS NHÂN VIÊN", "THỐNG KÊ/BÁO CÁO"
             };
 
             for (int i = 0; i < buttons.Length; i++)

@@ -29,6 +29,8 @@
             btnAddCart = new CuoreUI.Controls.cuiButton();
             btnSearch = new CuoreUI.Controls.cuiButton();
             pnlSanPhamChiTiet = new Panel();
+            label3 = new Label();
+            txtSoLuong = new TextBox();
             label1 = new Label();
             txtLieuDung = new TextBox();
             panelLeft = new Panel();
@@ -83,7 +85,7 @@
             // 
             lblValueMaKhach.AutoSize = true;
             lblValueMaKhach.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblValueMaKhach.Location = new Point(99, 397);
+            lblValueMaKhach.Location = new Point(99, 444);
             lblValueMaKhach.Name = "lblValueMaKhach";
             lblValueMaKhach.Size = new Size(28, 30);
             lblValueMaKhach.TabIndex = 20;
@@ -113,7 +115,7 @@
             // 
             lblValueTenKhachHang.AutoSize = true;
             lblValueTenKhachHang.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblValueTenKhachHang.Location = new Point(99, 433);
+            lblValueTenKhachHang.Location = new Point(99, 480);
             lblValueTenKhachHang.Name = "lblValueTenKhachHang";
             lblValueTenKhachHang.Size = new Size(28, 30);
             lblValueTenKhachHang.TabIndex = 21;
@@ -123,7 +125,7 @@
             // 
             lbnHienThiMaKhach.AutoSize = true;
             lbnHienThiMaKhach.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbnHienThiMaKhach.Location = new Point(16, 397);
+            lbnHienThiMaKhach.Location = new Point(16, 444);
             lbnHienThiMaKhach.Name = "lbnHienThiMaKhach";
             lbnHienThiMaKhach.Size = new Size(86, 30);
             lbnHienThiMaKhach.TabIndex = 19;
@@ -133,7 +135,7 @@
             // 
             lblHienThiTenKhach.AutoSize = true;
             lblHienThiTenKhach.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblHienThiTenKhach.Location = new Point(22, 433);
+            lblHienThiTenKhach.Location = new Point(21, 480);
             lblHienThiTenKhach.Name = "lblHienThiTenKhach";
             lblHienThiTenKhach.Size = new Size(80, 30);
             lblHienThiTenKhach.TabIndex = 18;
@@ -159,7 +161,7 @@
             btnThemKhachHang.ImageAutoCenter = true;
             btnThemKhachHang.ImageExpand = new Point(0, 0);
             btnThemKhachHang.ImageOffset = new Point(0, 0);
-            btnThemKhachHang.Location = new Point(16, 485);
+            btnThemKhachHang.Location = new Point(16, 532);
             btnThemKhachHang.Name = "btnThemKhachHang";
             btnThemKhachHang.NormalBackground = Color.OrangeRed;
             btnThemKhachHang.NormalForeColor = Color.White;
@@ -208,7 +210,7 @@
             btnThanhToan.ImageAutoCenter = true;
             btnThanhToan.ImageExpand = new Point(0, 0);
             btnThanhToan.ImageOffset = new Point(0, 0);
-            btnThanhToan.Location = new Point(176, 485);
+            btnThanhToan.Location = new Point(176, 532);
             btnThanhToan.Name = "btnThanhToan";
             btnThanhToan.NormalBackground = Color.DarkGreen;
             btnThanhToan.NormalForeColor = Color.White;
@@ -246,7 +248,7 @@
             btnAddCart.ImageAutoCenter = true;
             btnAddCart.ImageExpand = new Point(0, 0);
             btnAddCart.ImageOffset = new Point(0, 0);
-            btnAddCart.Location = new Point(13, 323);
+            btnAddCart.Location = new Point(13, 366);
             btnAddCart.Name = "btnAddCart";
             btnAddCart.NormalBackground = Color.OrangeRed;
             btnAddCart.NormalForeColor = Color.White;
@@ -305,6 +307,8 @@
             // pnlSanPhamChiTiet
             // 
             pnlSanPhamChiTiet.BackColor = Color.Gainsboro;
+            pnlSanPhamChiTiet.Controls.Add(label3);
+            pnlSanPhamChiTiet.Controls.Add(txtSoLuong);
             pnlSanPhamChiTiet.Controls.Add(label1);
             pnlSanPhamChiTiet.Controls.Add(txtLieuDung);
             pnlSanPhamChiTiet.Controls.Add(lblDonViTinh);
@@ -312,9 +316,25 @@
             pnlSanPhamChiTiet.Controls.Add(lblTenHang);
             pnlSanPhamChiTiet.Location = new Point(13, 65);
             pnlSanPhamChiTiet.Name = "pnlSanPhamChiTiet";
-            pnlSanPhamChiTiet.Size = new Size(375, 243);
+            pnlSanPhamChiTiet.Size = new Size(375, 273);
             pnlSanPhamChiTiet.TabIndex = 9;
             pnlSanPhamChiTiet.Paint += pnlSanPhamChiTiet_Paint;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(13, 229);
+            label3.Name = "label3";
+            label3.Size = new Size(57, 15);
+            label3.TabIndex = 9;
+            label3.Text = "Số Lượng";
+            // 
+            // txtSoLuong
+            // 
+            txtSoLuong.Location = new Point(80, 226);
+            txtSoLuong.Name = "txtSoLuong";
+            txtSoLuong.Size = new Size(281, 23);
+            txtSoLuong.TabIndex = 8;
             // 
             // label1
             // 
@@ -493,6 +513,7 @@
             dgvPrescriptionList.Size = new Size(580, 271);
             dgvPrescriptionList.TabIndex = 1;
             dgvPrescriptionList.CellClick += dgvPrescriptionList_CellClick_1;
+            dgvPrescriptionList.CellContentClick += dgvPrescriptionList_CellContentClick;
             dgvPrescriptionList.CellFormatting += dgvPrescriptionList_CellFormatting;
             // 
             // PrescriptionControl
@@ -539,5 +560,7 @@
         private Label lblValueTenKhachHang;
         private Label label2;
         private ComboBox comboBox1;
+        private Label label3;
+        private TextBox txtSoLuong;
     }
 }
