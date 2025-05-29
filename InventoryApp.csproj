@@ -42,6 +42,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="MauBangGia.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

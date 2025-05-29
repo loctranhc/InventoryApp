@@ -181,130 +181,153 @@ namespace InventoryApp
 
         public List<InventoryReportItem> GetInventoryReport(DateTime fromDate, DateTime toDate)
         {
-            var nhap = context.NhapXuatHangHoas
-                .Where(x => x.CreatedTime >= fromDate && x.CreatedTime <= toDate)
-                .GroupBy(x => new { x.MaHang, x.TenHang })
-                .Select(g => new
-                {
-                    g.Key.MaHang,
-                    g.Key.TenHang,
-                    TonTruoc = g.Max(x => x.SoLuongTonTruoc),
-                    SoLuongNhap = g.Sum(x => x.SoLuongNhap)
-                });
+            // 1. Lấy danh sách các ngày trong khoảng
+            var allDates = Enumerable.Range(0, (toDate.Date - fromDate.Date).Days + 1)
+                                      .Select(offset => fromDate.Date.AddDays(offset))
+                                      .ToList();
 
-            var ids = context.Orders.Where(x => x.OrderDate >= fromDate && x.OrderDate <= toDate).Select(x => x.OrderId).ToList();
-            var xuat = context.OrderDetails
-                .Where(x => ids.Contains(x.OrderId))
-                .GroupBy(x => new { x.MaHang })
-                .Select(g => new
-                {
-                    g.Key.MaHang,
-                    SoLuongXuat = g.Sum(x => x.SoLuong)
-                });
+            var result = new List<InventoryReportItem>();
 
-            var result = nhap
-                .GroupJoin(xuat, n => n.MaHang, x => x.MaHang,
-                    (n, xg) => new { n, xg })
-                .SelectMany(
-                    temp => temp.xg.DefaultIfEmpty(),
-                    (temp, x) => new InventoryReportItem
+            foreach (var date in allDates)
+            {
+                var start = date;
+                var end = date.AddDays(1).AddTicks(-1);
+
+                // 2. Dữ liệu nhập trong ngày
+                var nhap = context.NhapXuatHangHoas
+                    .Where(x => x.CreatedTime >= start && x.CreatedTime <= end)
+                    .GroupBy(x => new { x.MaHang, x.TenHang })
+                    .Select(g => new
                     {
-                        MaHang = temp.n.MaHang,
-                        TenHang = temp.n.TenHang,
-                        TonTruoc = temp.n.TonTruoc,
-                        SoLuongNhap = temp.n.SoLuongNhap,
-                        SoLuongXuat = (x == null) ? 0 : x.SoLuongXuat,
-                    })
-                .GroupBy(x => x.MaHang)
-                .Select(g => g.First()) // tránh trùng nếu nhiều dòng từ SelectMany
-                .ToList();
+                        g.Key.MaHang,
+                        g.Key.TenHang,
+                        SoLuongNhap = g.Sum(x => x.SoLuongNhap),
+                        TonTruoc = g.Max(x => x.SoLuongTonTruoc),
+                        CreatedTime = g.Max(x => x.CreatedTime)
+                    }).ToList();
 
-            int stt = 1;
-            result.ForEach(x => x.STT = stt++);
+                // 3. Dữ liệu xuất trong ngày
+                var orderIds = context.Orders
+                    .Where(o => o.OrderDate >= start && o.OrderDate <= end)
+                    .Select(o => o.OrderId)
+                    .ToList();
 
-            return result;
+                var xuat = context.OrderDetails
+                    .Where(od => orderIds.Contains(od.OrderId))
+                    .GroupBy(od => od.MaHang)
+                    .Select(g => new
+                    {
+                        MaHang = g.Key,
+                        SoLuongXuat = g.Sum(x => x.SoLuong),
+                        CreatedTime = g.Max(x => x.CreatedTime)
+                    }).ToList();
+
+                // 4. Gộp nhập và xuất
+                var allMaHang = nhap.Select(x => x.MaHang)
+                                    .Union(xuat.Select(x => x.MaHang))
+                                    .Distinct();
+
+                int stt = 1;
+                foreach (var maHang in allMaHang)
+                {
+                    var nh = nhap.FirstOrDefault(x => x.MaHang == maHang);
+                    var xu = xuat.FirstOrDefault(x => x.MaHang == maHang);
+
+                    var item = new InventoryReportItem
+                    {
+                        STT = stt++,
+                        MaHang = nh?.MaHang ?? xu.MaHang,
+                        TenHang = nh?.TenHang ?? "",
+                        TonTruoc = nh?.TonTruoc ?? 0,
+                        SoLuongNhap = nh?.SoLuongNhap ?? 0,
+                        SoLuongXuat = xu?.SoLuongXuat ?? 0,
+                        CreatedTime = nh?.CreatedTime ?? xu.CreatedTime
+                    };
+
+                    result.Add(item);
+                }
+            }
+
+            return result.OrderBy(x => x.CreatedTime).ThenBy(x => x.STT).ToList();
         }
+
 
         public void ExportInventoryReportByDate(List<InventoryReportItem> items, DateTime fromDate, DateTime toDate)
         {
             ExcelPackage.License.SetNonCommercialPersonal("Jack Five Bulb");
 
-            using (var package = new ExcelPackage())
+            using var package = new ExcelPackage();
+            var ws = package.Workbook.Worksheets.Add("Báo cáo");
+
+            // Tiêu đề
+            ws.Cells["D2"].Value = "BÁO CÁO XNT HÀNG HÓA";
+            ws.Cells["D2"].Style.Font.Bold = true;
+            ws.Cells["D2"].Style.Font.Size = 16;
+
+            ws.Cells["F4"].Value = "Từ ngày:";
+            ws.Cells["G4"].Value = fromDate.ToString("dd/MM/yyyy");
+            ws.Cells["F5"].Value = "Đến ngày:";
+            ws.Cells["G5"].Value = toDate.ToString("dd/MM/yyyy");
+
+            int row = 8;
+            var grouped = items.GroupBy(x => x.CreatedTime.Date).OrderBy(g => g.Key);
+
+            foreach (var group in grouped)
             {
-                var ws = package.Workbook.Worksheets.Add("Báo cáo XNT");
+                // Ngày bán
+                ws.Cells[row, 2].Value = $"Ngày bán: {group.Key:dd/MM/yyyy}";
+                ws.Cells[row, 2].Style.Font.Color.SetColor(System.Drawing.Color.Red);
+                ws.Cells[row, 2].Style.Font.Bold = true;
 
-                int currentRow = 1;
+                row++;
 
-                // Header
-                ws.Cells[currentRow, 4].Value = "BÁO CÁO XNT HÀNG HOÁ";
-                ws.Cells[currentRow, 4].Style.Font.Size = 16;
-                ws.Cells[currentRow, 4].Style.Font.Bold = true;
-                currentRow += 2;
-
-                ws.Cells[currentRow, 5].Value = "Từ ngày:";
-                ws.Cells[currentRow, 6].Value = fromDate.ToString("dd/MM/yyyy");
-                currentRow++;
-                ws.Cells[currentRow, 5].Value = "Đến ngày:";
-                ws.Cells[currentRow, 6].Value = toDate.ToString("dd/MM/yyyy");
-                currentRow += 2;
-
-                var grouped = items
-                    .Where(x => x.CreatedTime.Date >= fromDate.Date && x.CreatedTime.Date <= toDate.Date)
-                    .GroupBy(x => x.CreatedTime.Date)
-                    .OrderBy(g => g.Key);
-
-                foreach (var group in grouped)
+                // Tiêu đề bảng
+                string[] headers = { "#", "Mã Hàng", "Tên Hàng", "Số Lượng Tồn Trước", "Số Lượng Nhập", "Số Lượng Tồn Sau", "Số Lượng Xuất" };
+                for (int i = 0; i < headers.Length; i++)
                 {
-                    // Ngày bán
-                    ws.Cells[currentRow, 2].Value = $"Ngày bán: {group.Key:dd/MM/yyyy}";
-                    ws.Cells[currentRow, 2].Style.Font.Bold = true;
-                    ws.Cells[currentRow, 2].Style.Font.Color.SetColor(System.Drawing.Color.Red);
-                    currentRow++;
-
-                    // Header columns
-                    ws.Cells[currentRow, 2].Value = "#";
-                    ws.Cells[currentRow, 3].Value = "Mã Hàng";
-                    ws.Cells[currentRow, 4].Value = "Tên Hàng";
-                    ws.Cells[currentRow, 5].Value = "Số Lượng Tồn Trước";
-                    ws.Cells[currentRow, 6].Value = "Số Lượng Nhập";
-                    ws.Cells[currentRow, 7].Value = "Số Lượng Tồn Sau";
-                    ws.Cells[currentRow, 8].Value = "Số Lượng Xuất";
-                    ws.Cells[currentRow, 2, currentRow, 8].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                    ws.Cells[currentRow, 2, currentRow, 8].Style.Font.Bold = true;
-                    currentRow++;
-
-                    int stt = 1;
-                    foreach (var item in group)
-                    {
-                        ws.Cells[currentRow, 2].Value = stt++;
-                        ws.Cells[currentRow, 3].Value = item.MaHang;
-                        ws.Cells[currentRow, 4].Value = item.TenHang;
-                        ws.Cells[currentRow, 5].Value = item.TonTruoc;
-                        ws.Cells[currentRow, 6].Value = item.SoLuongNhap;
-                        ws.Cells[currentRow, 7].Value = item.TonSau;
-                        ws.Cells[currentRow, 8].Value = item.SoLuongXuat;
-
-                        ws.Cells[currentRow, 2, currentRow, 8].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                        currentRow++;
-                    }
-
-                    currentRow += 2;
+                    ws.Cells[row, i + 2].Value = headers[i];
+                    ws.Cells[row, i + 2].Style.Font.Bold = true;
+                    ws.Cells[row, i + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    ws.Cells[row, i + 2].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    ws.Cells[row, i + 2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                 }
 
-                // Auto-fit columns
-                ws.Cells[1, 1, currentRow, 8].AutoFitColumns();
+                row++;
 
-                // Lưu file
-                using var saveDialog = new SaveFileDialog
+                int stt = 1;
+                foreach (var item in group)
                 {
-                    Filter = "Excel files (*.xlsx)|*.xlsx",
-                    FileName = $"BaoCaoXNTHangHoa-{DateTimeOffset.Now.ToUnixTimeSeconds()}.xlsx"
-                };
-                if (saveDialog.ShowDialog() == DialogResult.OK)
-                {
-                    File.WriteAllBytes(saveDialog.FileName, package.GetAsByteArray());
-                    MessageBox.Show("Xuất báo cáo thành công!");
+                    ws.Cells[row, 2].Value = stt++;
+                    ws.Cells[row, 3].Value = item.MaHang;
+                    ws.Cells[row, 4].Value = item.TenHang;
+                    ws.Cells[row, 5].Value = item.TonTruoc;
+                    ws.Cells[row, 6].Value = item.SoLuongNhap;
+                    ws.Cells[row, 7].Value = item.TonSau;
+                    ws.Cells[row, 8].Value = item.SoLuongXuat ?? 0;
+
+                    for (int i = 2; i <= 8; i++)
+                        ws.Cells[row, i].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
+                    row++;
                 }
+
+                row += 2; // khoảng cách giữa các ngày
+
+            }
+
+            // Auto-fit columns
+            ws.Cells[ws.Dimension.Address].AutoFitColumns();
+
+            // Lưu file
+            using var saveDialog = new SaveFileDialog
+            {
+                Filter = "Excel files (*.xlsx)|*.xlsx",
+                FileName = $"BaoCaoXNTHangHoa-{DateTimeOffset.Now.ToUnixTimeSeconds()}.xlsx"
+            };
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllBytes(saveDialog.FileName, package.GetAsByteArray());
+                MessageBox.Show("Xuất báo cáo thành công!");
             }
         }
 

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using DocumentFormat.OpenXml.InkML;
 using MigrateDatabase;
 using MigrateDatabase.Models;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace InventoryApp
 {
@@ -90,6 +91,17 @@ namespace InventoryApp
                 product.GiaBan = decimal.Parse(txtGiaBan.Text.Trim());
 
                 AppDbContext.Products.Add(product);
+                AppDbContext.SaveChanges();
+
+                NhapXuatHangHoa nhapXuatHangHoa = new NhapXuatHangHoa();
+                nhapXuatHangHoa.SoLuongTonTruoc = 0;
+                nhapXuatHangHoa.SoLuongXuat = 0;
+                nhapXuatHangHoa.SoLuongNhap = product.SoLuongTonKho;
+                nhapXuatHangHoa.MaHang = product.MaHang;
+                nhapXuatHangHoa.TenHang = product.TenHang;
+                nhapXuatHangHoa.CreatedTime = DateTime.Now;
+                nhapXuatHangHoa.ProductId = product.Id;
+                AppDbContext.NhapXuatHangHoas.Add(nhapXuatHangHoa);
                 AppDbContext.SaveChanges();
 
                 MessageBox.Show("Thêm sản phẩm thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);

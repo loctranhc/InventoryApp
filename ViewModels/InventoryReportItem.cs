@@ -6,6 +6,6 @@
     public int TonTruoc { get; set; }
     public int SoLuongNhap { get; set; }
     public int? SoLuongXuat { get; set; }
-    public int TonSau => TonTruoc + SoLuongNhap - SoLuongXuat.Value;
+    public int TonSau => TonTruoc + SoLuongNhap - SoLuongXuat.GetValueOrDefault();
     public DateTime CreatedTime { get; set; }
 }

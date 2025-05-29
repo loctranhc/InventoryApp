@@ -158,7 +158,7 @@ namespace InventoryApp
 
         private void LoadChiTiet(List<PrescriptionDetail> list)
         {
-            BindingList<object> sources = new BindingList<object>();
+            BindingList<PrescriptionDetail> sources = new BindingList<PrescriptionDetail>();
             foreach (var order in list)
             {
                 sources.Add(order);
@@ -167,10 +167,10 @@ namespace InventoryApp
             bindingSource.DataSource = sources;
             dataGridView2.DataSource = bindingSource;
 
-            dataGridView1.Columns["Id"].Visible = false;
-            dataGridView1.Columns["PrescriptionId"].Visible = false;
-            dataGridView1.Columns["MaKH"].Visible = false;
-            dataGridView1.Columns["MaNhanVien"].Visible = false;
+            dataGridView2.Columns["Id"].Visible = false;
+            dataGridView2.Columns["PrescriptionId"].Visible = false;
+            dataGridView2.Columns["MaKH"].Visible = false;
+            dataGridView2.Columns["MaNhanVien"].Visible = false;
             dataGridView2.Columns["MaThuoc"].HeaderText = "Mã Hàng";
             dataGridView2.Columns["TenThuoc"].HeaderText = "Tên Hàng";
             dataGridView2.Columns["SoLuong"].HeaderText = "Tên Hàng";

@@ -144,7 +144,19 @@ namespace InventoryApp
             {
                 var product = context.Products.FirstOrDefault(x => x.MaHang == detail.MaHang);
                 if (product is not null)
+                {
+                    NhapXuatHangHoa nhapXuatHangHoa = new NhapXuatHangHoa();
+                    nhapXuatHangHoa.SoLuongTonTruoc = product.SoLuongTonKho;
+                    nhapXuatHangHoa.SoLuongXuat = detail.SoLuong;
+                    nhapXuatHangHoa.SoLuongNhap = 0;
+                    nhapXuatHangHoa.MaHang = product.MaHang;
+                    nhapXuatHangHoa.TenHang = product.TenHang;
+                    nhapXuatHangHoa.CreatedTime = DateTime.Now;
+                    nhapXuatHangHoa.ProductId = product.Id;
+                    context.NhapXuatHangHoas.Add(nhapXuatHangHoa);
+
                     product.SoLuongTonKho = product.SoLuongTonKho - detail.SoLuong;
+                }
             }
 
             context.SaveChanges();
