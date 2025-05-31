@@ -18,8 +18,9 @@ namespace InventoryApp
     public partial class ThongTinDonThuocMau : Form
     {
         private readonly InventoryAppDbContext dbContext;
-        private BindingList<PrescriptionDetail> details = new BindingList<PrescriptionDetail>();
-        private List<Medicine> medicines = new List<Medicine>();
+        private BindingList<OrderDetail> details = new BindingList<OrderDetail>();
+        private List<Product> products = new List<Product>();
+        private Order editableOrder;
         private readonly string _frmStyle = "";
 
         public ThongTinDonThuocMau(InventoryAppDbContext Context)
@@ -32,12 +33,12 @@ namespace InventoryApp
             txtSoLuong.Text = "1";
 
             AutoCompleteStringCollection autoCompleteStringCollection = new AutoCompleteStringCollection();
-            autoCompleteStringCollection.AddRange(dbContext.Medicines.Select(x => x.TenThuoc).ToArray());
-            autoCompleteStringCollection.AddRange(dbContext.Medicines.Select(x => x.MaThuoc).ToArray());
+            autoCompleteStringCollection.AddRange(dbContext.Products.Where(x => x.IsHidden == false).Select(x => x.MaHang).ToArray());
+            autoCompleteStringCollection.AddRange(dbContext.Products.Where(x => x.IsHidden == false).Select(x => x.TenHang).ToArray());
             txtTimKiemThuoc.AutoCompleteCustomSource = autoCompleteStringCollection;
         }
 
-        public ThongTinDonThuocMau(InventoryAppDbContext Context, Prescription prescription, string FormStyle = "Edit")
+        public ThongTinDonThuocMau(InventoryAppDbContext Context, Order order, string FormStyle = "Edit")
         {
             InitializeComponent();
             dbContext = Context;
@@ -48,35 +49,36 @@ namespace InventoryApp
             _frmStyle = FormStyle;
 
             AutoCompleteStringCollection autoCompleteStringCollection = new AutoCompleteStringCollection();
-            autoCompleteStringCollection.AddRange(dbContext.Medicines.Select(x => x.TenThuoc).ToArray());
-            autoCompleteStringCollection.AddRange(dbContext.Medicines.Select(x => x.MaThuoc).ToArray());
+            autoCompleteStringCollection.AddRange(dbContext.Products.Where(x => x.IsHidden == false).Select(x => x.MaHang).ToArray());
+            autoCompleteStringCollection.AddRange(dbContext.Products.Where(x => x.IsHidden == false).Select(x => x.TenHang).ToArray());
             txtTimKiemThuoc.AutoCompleteCustomSource = autoCompleteStringCollection;
 
-            var chiTiet = dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == prescription.Id).ToList();
+            var chiTiet = dbContext.OrderDetails.Where(x => x.OrderId == order.OrderId).ToList();
             foreach (var item in chiTiet)
             {
                 details.Add(item);
-                var thuoc = dbContext.Medicines.FirstOrDefault(X => X.MaThuoc == item.MaThuoc);
-                if (thuoc != null)
-                    medicines.Add(thuoc);
+                var product = dbContext.Products.FirstOrDefault(X => X.MaHang.Trim().ToLower() == item.MaHang.Trim().ToLower());
+                if (product != null)
+                    products.Add(product);
             }
-            
-            txtTenDonThuoc.Text = prescription.TenDonThuoc;
+
+            editableOrder = order;
+            txtTenDonThuoc.Text = order.TenHoaDon;
             LoadChITiet(details);
         }
 
-        private void LoadChITiet(BindingList<PrescriptionDetail> details)
+        private void LoadChITiet(BindingList<OrderDetail> details)
         {
             BindingSource bindingSource = new BindingSource();
             bindingSource.DataSource = details;
             dgvDonThuoc.DataSource = bindingSource;
 
             dgvDonThuoc.Columns["Id"].Visible = false;
-            dgvDonThuoc.Columns["PrescriptionId"].Visible = false;
-            dgvDonThuoc.Columns["MaKH"].Visible = false;
-            dgvDonThuoc.Columns["MaNhanVien"].Visible = false;
-            dgvDonThuoc.Columns["MaThuoc"].HeaderText = "Mã Thuốc";
-            dgvDonThuoc.Columns["TenThuoc"].HeaderText = "Tên Thuốc";
+            dgvDonThuoc.Columns["OrderId"].Visible = false;
+            dgvDonThuoc.Columns["GiaBan"].Visible = false;
+            dgvDonThuoc.Columns["CreatedTime"].Visible = false;
+            dgvDonThuoc.Columns["MaHang"].HeaderText = "Mã Sản Phẩm";
+            dgvDonThuoc.Columns["TenHang"].HeaderText = "Tên Sản Phẩm";
             dgvDonThuoc.Columns["SoLuong"].HeaderText = "Số Lượng";
             dgvDonThuoc.Columns["LieuDung"].HeaderText = "Liều Dùng";
 
@@ -125,16 +127,16 @@ namespace InventoryApp
         private void txtTimKiemThuoc_TextChanged(object sender, EventArgs e)
         {
             string keyword = txtTimKiemThuoc.Text.Trim().ToLower();
-            var thuoc = dbContext.Medicines.FirstOrDefault(x => x.TenThuoc.ToLower().Contains(keyword) || x.MaThuoc.ToLower().Contains(keyword));
+            var thuoc = dbContext.Products.FirstOrDefault(x => x.TenHang.ToLower().Contains(keyword) || x.MaHang.ToLower().Contains(keyword) && x.IsHidden == false);
 
             if (thuoc is not null)
             {
-                richTextBox1.Text = $"Tên thuốc: {thuoc.TenThuoc}\n\nHãng sản xuất: {thuoc.HangSanXuat}\nXuất xứ: {thuoc.NuocSanXuat}\nĐơn Vị Tính: {thuoc.DonViTinh}\nHàm lượng: {thuoc.HamLuong}";
+                richTextBox1.Text = $"Tên hàng: {thuoc.TenHang}\n\nĐơn vị tính: {thuoc.DonViTinh}\nSố lượng tồn kho: {thuoc.SoLuongTonKho}\nGiá nhập: {thuoc.GiaNhap}\nGiá bán: {thuoc.GiaBan}";
                 btnThemThuoc.Tag = thuoc;
             }
             else
             {
-                MessageBox.Show("Không có loại thuốc này.", "Thông báo");
+                MessageBox.Show("Không có loại sản phẩm này.", "Thông báo");
             }
         }
 
@@ -146,53 +148,39 @@ namespace InventoryApp
             }
             catch
             {
-                MessageBox.Show("Vui lòng nhập số lượng!", "Thông báo");
+                MessageBox.Show("Vui lòng nhập đúng định dạng số lượng!", "Thông báo");
                 return;
             }
 
-            if (string.IsNullOrEmpty(txtLieuDung.Text))
+            try
             {
-                MessageBox.Show("Phải chỉ định liều dùng.", "Thông báo");
-                return;
+                int.Parse(txtLieuDung.Text);
             }
-
-            if (string.IsNullOrEmpty(txtSoLuong.Text))
+            catch
             {
-                MessageBox.Show("Vui lòng nhập số lượng.", "Thông báo");
+                MessageBox.Show("Vui lòng nhập đúng định dạng liều dùng!", "Thông báo");
                 return;
             }
 
-            var currentSelected = btnThemThuoc.Tag as Medicine;
-            var exist = medicines.FirstOrDefault(x => x.MaThuoc == currentSelected.MaThuoc);
+            var currentSelected = btnThemThuoc.Tag as Product;
+            var exist = products.FirstOrDefault(x => x.MaHang.Trim() == currentSelected.MaHang.Trim());
 
             if (currentSelected != null)
             {
                 if(exist is not null)
                 {
-                    medicines.Remove(exist);
-                    var exists = details.FirstOrDefault(x => x.MaThuoc == currentSelected.MaThuoc);
+                    products.Remove(exist);
+                    var exists = details.FirstOrDefault(x => x.MaHang.Trim() == currentSelected.MaHang.Trim());
                     details.Remove(exists);
                 }
 
-                var maNhanVien = "";
-                try
+                products.Add(currentSelected);
+                details.Add(new OrderDetail
                 {
-                    maNhanVien = UserSession.CurrentUser.UserNo;
-                }
-                catch
-                {
-                    maNhanVien = "N/A";
-                }
-
-                medicines.Add(currentSelected);
-                details.Add(new PrescriptionDetail
-                {
-                    LieuDung = txtLieuDung.Text,
-                    MaNhanVien = maNhanVien,
-                    MaKH = "KH-1",
-                    MaThuoc = currentSelected.MaThuoc,
-                    TenThuoc = currentSelected.TenThuoc,
-                    SoLuong = int.Parse(txtSoLuong.Text)
+                    LieuDung = int.Parse(txtLieuDung.Text),
+                    MaHang = currentSelected.MaHang,
+                    TenHang = currentSelected.TenHang,
+                    SoLuong = int.Parse(txtSoLuong.Text),
                 });
             }
 
@@ -208,9 +196,9 @@ namespace InventoryApp
         {
             if (e.RowIndex >= 0 && e.ColumnIndex == dgvDonThuoc.Columns["btnXoa"].Index)
             {
-                string maThuoc = dgvDonThuoc.Rows[e.RowIndex].Cells["MaThuoc"].Value?.ToString();
+                string maHang = dgvDonThuoc.Rows[e.RowIndex].Cells["MaHang"].Value?.ToString();
 
-                var thuoc = details.FirstOrDefault(x => x.MaThuoc == maThuoc);
+                var thuoc = details.FirstOrDefault(x => x.MaHang.Trim() == maHang.Trim());
                 if (thuoc != null)
                     details.Remove(thuoc);
 
@@ -221,14 +209,14 @@ namespace InventoryApp
             if (dgvDonThuoc.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = dgvDonThuoc.SelectedRows[0];
-                string maThuoc = selectedRow.Cells["MaThuoc"].Value?.ToString();
+                string maHang = selectedRow.Cells["MaHang"].Value?.ToString();
                 string lieuDung = selectedRow.Cells["LieuDung"].Value?.ToString().Split('/').First();
                 string soLuong = selectedRow.Cells["SoLuong"].Value?.ToString();
-                var thuoc = medicines.FirstOrDefault(x => x.MaThuoc == maThuoc);
+                var thuoc = products.FirstOrDefault(x => x.MaHang == maHang);
 
                 if (thuoc != null)
                 {
-                    richTextBox1.Text = $"Tên thuốc: {thuoc.TenThuoc}\n\nHãng sản xuất: {thuoc.HangSanXuat}\nXuất xứ: {thuoc.NuocSanXuat}\nĐơn Vị Tính: {thuoc.DonViTinh}\nHàm lượng: {thuoc.HamLuong}";
+                    richTextBox1.Text = $"Tên hàng: {thuoc.TenHang}\n\nĐơn vị tính: {thuoc.DonViTinh}\nSố lượng tồn kho: {thuoc.SoLuongTonKho}\nGiá nhập: {thuoc.GiaNhap}\nGiá bán: {thuoc.GiaBan}";
                     txtSoLuong.Text = soLuong;
                     txtLieuDung.Text = lieuDung;
                     btnThemThuoc.Tag = thuoc;
@@ -256,23 +244,21 @@ namespace InventoryApp
                 return;
             }
 
-            var toaThuoc = dbContext.Prescriptions.FirstOrDefault(x => x.TenDonThuoc.ToLower() == txtTenDonThuoc.Text.ToLower());
+            var toaThuoc = dbContext.Orders.FirstOrDefault(x => x.TenHoaDon.ToLower().Trim() == txtTenDonThuoc.Text.ToLower().Trim());
             if (toaThuoc is not null)
             {
                 if (_frmStyle.Equals("Edit"))
                 {
-                    var chiTietToaThuoc = dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == toaThuoc.Id).ToList();
+                    var chiTietToaThuoc = dbContext.OrderDetails.Where(x => x.OrderId == toaThuoc.OrderId).ToList();
                     dbContext.RemoveRange(chiTietToaThuoc);
 
-                    dbContext.PrescriptionDetails.AddRange(details.Select(x => new PrescriptionDetail
+                    dbContext.OrderDetails.AddRange(details.Select(x => new OrderDetail
                     {
                         LieuDung = x.LieuDung,
-                        MaKH = x.MaKH,
-                        MaNhanVien = x.MaNhanVien,
-                        MaThuoc = x.MaThuoc,
-                        PrescriptionId = toaThuoc.Id,
                         SoLuong = x.SoLuong,
-                        TenThuoc = x.TenThuoc
+                        TenHang = x.TenHang,
+                        MaHang = x.MaHang,
+                        OrderId = editableOrder.OrderId,
                     }));
                     dbContext.SaveChanges();
                     MessageBox.Show("Lưu thành công!", "Thông báo");
@@ -286,22 +272,22 @@ namespace InventoryApp
                 return;
             }
 
-            toaThuoc = new Prescription
+            toaThuoc = new Order
             {
-                IsToaThuocMau = true,
-                MaDonThuoc = string.Empty,
-                TenDonThuoc = txtTenDonThuoc.Text
+                IsHoaDonMau = true,
+                MaNhanVien = UserSession.CurrentUser.UserNo,
+                TenHoaDon = txtTenDonThuoc.Text
             };
-            dbContext.Prescriptions.Add(toaThuoc);
+            dbContext.Orders.Add(toaThuoc);
             dbContext.SaveChanges();
 
             foreach (var item in details)
             {
-                item.PrescriptionId = toaThuoc.Id;
-                dbContext.PrescriptionDetails.Add(item);
+                item.OrderId = toaThuoc.OrderId;
+                dbContext.OrderDetails.Add(item);
             }
-            var newToaThuoc = dbContext.Prescriptions.FirstOrDefault(x => x.Id == toaThuoc.Id);
-            newToaThuoc.MaDonThuoc = $"TT-{newToaThuoc.Id}";
+            var newToaThuoc = dbContext.Orders.FirstOrDefault(x => x.OrderId == toaThuoc.OrderId);
+            newToaThuoc.OrderNo = $"TT-{newToaThuoc.OrderId}";
             dbContext.SaveChanges();
             MessageBox.Show("Lưu thành công!", "Thông báo");
             this.Tag = newToaThuoc;

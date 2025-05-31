@@ -20,7 +20,7 @@ namespace InventoryApp
         {
             InitializeComponent();
             _dbContext = dbContext;
-            var products = _dbContext.Products.ToList();
+            var products = _dbContext.Products.Where(x => x.IsHidden == false).ToList();
             LoadSanPham(products);
 
             AutoCompleteStringCollection autoCompleteStringCollection = new AutoCompleteStringCollection();
@@ -42,10 +42,12 @@ namespace InventoryApp
             bindingNavigator.ImageScalingSize = new Size(24, 24);
             if (!this.Controls.Contains(bindingNavigator))
             {
-                this.Controls.Add(bindingNavigator);
+                //this.Controls.Add(bindingNavigator);
             }
 
             dgvProducts.Columns["Id"].Visible = false;
+            dgvProducts.Columns["IsHidden"].Visible = false;
+            dgvProducts.Columns["CategoryId"].Visible = false;
             dgvProducts.Columns["MaHang"].HeaderText = "Mã Hàng";
             dgvProducts.Columns["TenHang"].HeaderText = "Tên Hàng";
             dgvProducts.Columns["DonViTinh"].HeaderText = "Đơn Vị Tính";
@@ -67,7 +69,7 @@ namespace InventoryApp
             dgvProducts.EnableHeadersVisualStyles = false;
             dgvProducts.RowHeadersVisible = false;
             dgvProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvProducts.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            dgvProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
             typeof(DataGridView).InvokeMember("DoubleBuffered",
                 BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
@@ -102,7 +104,7 @@ namespace InventoryApp
             string keyword = txtTimKiem.Text.Trim().ToLower();
 
             var filtered = _dbContext.Products
-                .Where(p => p.MaHang.ToLower().Contains(keyword) || p.TenHang.ToLower().Contains(keyword))
+                .Where(p => p.IsHidden == false && p.MaHang.ToLower().Contains(keyword) || p.TenHang.ToLower().Contains(keyword))
                 .ToList();
 
             LoadSanPham(filtered);
@@ -128,13 +130,13 @@ namespace InventoryApp
                 var category = _dbContext.Categories.FirstOrDefault(x => x.TenNhomHang.Equals(txt));
                 if (category != null)
                 {
-                    var products = _dbContext.Products.Where(x => x.CategoryId == category.Id);
+                    var products = _dbContext.Products.Where(x => x.CategoryId == category.Id && x.IsHidden == false);
                     LoadSanPham(products.ToList());
                 }
             }
             else
             {
-                LoadSanPham(_dbContext.Products.ToList());
+                LoadSanPham(_dbContext.Products.Where(x => x.IsHidden == false).ToList());
             }
         }
 
@@ -156,7 +158,7 @@ namespace InventoryApp
                     });
 
                     MessageBox.Show("Nhập hàng thành công!");
-                    LoadSanPham(_dbContext.Products.ToList());
+                    LoadSanPham(_dbContext.Products.Where(x => x.IsHidden == false).ToList());
                 }
                 catch (Exception ex)
                 {
@@ -208,9 +210,87 @@ namespace InventoryApp
         private void btnThem_Click(object sender, EventArgs e)
         {
             var productForm = new ProductForm(_dbContext);
-            if(productForm.ShowDialog() == DialogResult.OK)
+            if (productForm.ShowDialog() == DialogResult.OK)
             {
-                LoadSanPham(_dbContext.Products.ToList());
+                LoadSanPham(_dbContext.Products.Where(x => x.IsHidden == false).ToList());
+            }
+        }
+
+        private void dgvProducts_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+            var confirm = MessageBox.Show("Bạn có chắc chắn muốn xoá sản phẩm này?",
+                                              "Xác nhận xoá",
+                                              MessageBoxButtons.YesNo,
+                                              MessageBoxIcon.Warning);
+
+            if (confirm == DialogResult.No) return;
+
+            if (dgvProducts.SelectedRows.Count == 1)
+            {
+                DataGridViewRow selectedRow = dgvProducts.SelectedRows[0];
+                var maHang = selectedRow.Cells["MaHang"].Value?.ToString();
+
+                var filtered = _dbContext.Products
+                    .FirstOrDefault(p => p.IsHidden == false && p.MaHang.ToLower().Equals(maHang));
+
+                if (filtered != null)
+                {
+                    filtered.IsHidden = true;
+                    _dbContext.SaveChanges();
+                    LoadSanPham(_dbContext.Products.Where(x => x.IsHidden == false).ToList());
+                }
+            }
+        }
+
+        private void btnSua_Click(object sender, EventArgs e)
+        {
+            if (dgvProducts.SelectedRows.Count == 1)
+            {
+                DataGridViewRow selectedRow = dgvProducts.SelectedRows[0];
+                var maHang = selectedRow.Cells["MaHang"].Value?.ToString();
+
+                var filtered = _dbContext.Products
+                    .FirstOrDefault(p => p.IsHidden == false && p.MaHang.ToLower().Equals(maHang));
+
+                if (filtered != null)
+                {
+                    var productForm = new ProductForm(_dbContext, filtered);
+                    if (productForm.ShowDialog() == DialogResult.OK)
+                    {
+                        LoadSanPham(_dbContext.Products.Where(x => x.IsHidden == false).ToList());
+                    }
+                }
+            }
+            else
+            {
+                if(dgvProducts.SelectedRows.Count <= 0)
+                    MessageBox.Show("Chưa chọn sản phẩm cần sửa.", "Thông Báo",MessageBoxButtons.YesNo,MessageBoxIcon.Information);
+            }
+        }
+
+        private void dgvProducts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvProducts.SelectedRows.Count == 1)
+            {
+                DataGridViewRow selectedRow = dgvProducts.SelectedRows[0];
+                var maHang = selectedRow.Cells["MaHang"].Value?.ToString();
+
+                var filtered = _dbContext.Products
+                    .FirstOrDefault(p => p.IsHidden == false && p.MaHang.ToLower().Equals(maHang));
+
+                if (filtered != null)
+                {
+                    var productForm = new ProductForm(_dbContext, filtered);
+                    if (productForm.ShowDialog() == DialogResult.OK)
+                    {
+                        LoadSanPham(_dbContext.Products.Where(x => x.IsHidden == false).ToList());
+                    }
+                }
             }
         }
     }

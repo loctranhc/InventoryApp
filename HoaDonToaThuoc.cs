@@ -24,7 +24,7 @@ namespace InventoryApp
             InitializeComponent();
             appDbContext = dbContext;
             comboBox1.Items.Add("Hoá Đơn");
-            comboBox1.Items.Add("Toa Thuốc");
+            //comboBox1.Items.Add("Toa Thuốc");
             comboBox1.SelectedIndex = 0;
         }
 
@@ -86,6 +86,7 @@ namespace InventoryApp
             dataGridView1.Columns["OrderId"].Visible = false;
             dataGridView1.Columns["UserNo"].Visible = false;
             dataGridView1.Columns["MaNhanVien"].Visible = false;
+            dataGridView1.Columns["IsHoaDonMau"].Visible = false;
             dataGridView1.Columns["OrderNo"].HeaderText = "Mã Hoá Đơn";
             dataGridView1.Columns["OrderDate"].HeaderText = "Ngày Tạo";
             dataGridView1.Columns["PhanTramGiamGia"].HeaderText = "Giảm Giá Theo Phần Trăm";

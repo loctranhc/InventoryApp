@@ -107,6 +107,7 @@
             btnBaoCaoBanThuoc.TabIndex = 1;
             btnBaoCaoBanThuoc.TextAlignment = StringAlignment.Center;
             btnBaoCaoBanThuoc.TextOffset = new Point(0, 0);
+            btnBaoCaoBanThuoc.Visible = false;
             btnBaoCaoBanThuoc.Click += btnBaoCaoBanThuoc_Click;
             // 
             // cuiButton3

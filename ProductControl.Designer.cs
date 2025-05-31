@@ -22,6 +22,8 @@
             cbxCategory = new ComboBox();
             txtTimKiem = new TextBox();
             btnDownFileMau = new CuoreUI.Controls.cuiButton();
+            btnSua = new CuoreUI.Controls.cuiButton();
+            btnXoa = new CuoreUI.Controls.cuiButton();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             SuspendLayout();
             // 
@@ -29,17 +31,19 @@
             // 
             dgvProducts.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvProducts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvProducts.Location = new Point(18, 146);
+            dgvProducts.Location = new Point(20, 143);
             dgvProducts.Name = "dgvProducts";
-            dgvProducts.Size = new Size(966, 402);
+            dgvProducts.Size = new Size(1019, 490);
             dgvProducts.TabIndex = 1;
+            dgvProducts.CellContentClick += dgvProducts_CellContentClick;
+            dgvProducts.CellDoubleClick += dgvProducts_CellDoubleClick;
             // 
             // label1
             // 
             label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(599, 11);
+            label1.Location = new Point(654, 21);
             label1.Name = "label1";
             label1.Size = new Size(152, 21);
             label1.TabIndex = 6;
@@ -66,7 +70,7 @@
             btnTimKiem.ImageAutoCenter = true;
             btnTimKiem.ImageExpand = new Point(0, 0);
             btnTimKiem.ImageOffset = new Point(0, 0);
-            btnTimKiem.Location = new Point(903, 37);
+            btnTimKiem.Location = new Point(958, 47);
             btnTimKiem.Name = "btnTimKiem";
             btnTimKiem.NormalBackground = Color.OrangeRed;
             btnTimKiem.NormalForeColor = Color.White;
@@ -78,7 +82,7 @@
             btnTimKiem.PressedImageTint = Color.White;
             btnTimKiem.PressedOutline = Color.FromArgb(64, 128, 128, 128);
             btnTimKiem.Rounding = new Padding(8);
-            btnTimKiem.Size = new Size(81, 45);
+            btnTimKiem.Size = new Size(81, 33);
             btnTimKiem.TabIndex = 7;
             btnTimKiem.TextAlignment = StringAlignment.Center;
             btnTimKiem.TextOffset = new Point(0, 0);
@@ -87,6 +91,7 @@
             // btnThem
             // 
             btnThem.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnThem.BackColor = Color.Transparent;
             btnThem.CheckButton = false;
             btnThem.Checked = false;
             btnThem.CheckedBackground = Color.FromArgb(255, 106, 0);
@@ -105,9 +110,9 @@
             btnThem.ImageAutoCenter = true;
             btnThem.ImageExpand = new Point(0, 0);
             btnThem.ImageOffset = new Point(0, 0);
-            btnThem.Location = new Point(881, 106);
+            btnThem.Location = new Point(775, 103);
             btnThem.Name = "btnThem";
-            btnThem.NormalBackground = Color.OrangeRed;
+            btnThem.NormalBackground = Color.Green;
             btnThem.NormalForeColor = Color.White;
             btnThem.NormalImageTint = Color.White;
             btnThem.NormalOutline = Color.FromArgb(64, 128, 128, 128);
@@ -144,7 +149,7 @@
             btnNhapHang.ImageAutoCenter = true;
             btnNhapHang.ImageExpand = new Point(0, 0);
             btnNhapHang.ImageOffset = new Point(0, 0);
-            btnNhapHang.Location = new Point(710, 106);
+            btnNhapHang.Location = new Point(591, 103);
             btnNhapHang.Name = "btnNhapHang";
             btnNhapHang.NormalBackground = Color.RoyalBlue;
             btnNhapHang.NormalForeColor = Color.White;
@@ -166,7 +171,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(20, 117);
+            label2.Location = new Point(20, 94);
             label2.Name = "label2";
             label2.Size = new Size(71, 17);
             label2.TabIndex = 13;
@@ -176,9 +181,9 @@
             // 
             cbxCategory.DropDownStyle = ComboBoxStyle.DropDownList;
             cbxCategory.FormattingEnabled = true;
-            cbxCategory.Location = new Point(95, 114);
+            cbxCategory.Location = new Point(20, 114);
             cbxCategory.Name = "cbxCategory";
-            cbxCategory.Size = new Size(195, 23);
+            cbxCategory.Size = new Size(233, 23);
             cbxCategory.TabIndex = 14;
             cbxCategory.SelectedIndexChanged += cbxCategory_SelectedIndexChanged_1;
             // 
@@ -188,7 +193,7 @@
             txtTimKiem.AutoCompleteMode = AutoCompleteMode.Suggest;
             txtTimKiem.AutoCompleteSource = AutoCompleteSource.CustomSource;
             txtTimKiem.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtTimKiem.Location = new Point(599, 44);
+            txtTimKiem.Location = new Point(653, 47);
             txtTimKiem.Name = "txtTimKiem";
             txtTimKiem.Size = new Size(299, 33);
             txtTimKiem.TabIndex = 15;
@@ -214,7 +219,7 @@
             btnDownFileMau.ImageAutoCenter = true;
             btnDownFileMau.ImageExpand = new Point(0, 0);
             btnDownFileMau.ImageOffset = new Point(0, 0);
-            btnDownFileMau.Location = new Point(474, 106);
+            btnDownFileMau.Location = new Point(355, 103);
             btnDownFileMau.Name = "btnDownFileMau";
             btnDownFileMau.NormalBackground = Color.RoyalBlue;
             btnDownFileMau.NormalForeColor = Color.White;
@@ -232,12 +237,94 @@
             btnDownFileMau.TextOffset = new Point(0, 0);
             btnDownFileMau.Click += btnDownFileMau_Click;
             // 
+            // btnSua
+            // 
+            btnSua.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnSua.BackColor = Color.Transparent;
+            btnSua.CheckButton = false;
+            btnSua.Checked = false;
+            btnSua.CheckedBackground = Color.FromArgb(255, 106, 0);
+            btnSua.CheckedForeColor = Color.White;
+            btnSua.CheckedImageTint = Color.White;
+            btnSua.CheckedOutline = Color.FromArgb(255, 106, 0);
+            btnSua.Content = "Sửa";
+            btnSua.DialogResult = DialogResult.None;
+            btnSua.Font = new Font("Microsoft Sans Serif", 9.75F);
+            btnSua.ForeColor = Color.White;
+            btnSua.HoverBackground = SystemColors.Window;
+            btnSua.HoveredImageTint = Color.White;
+            btnSua.HoverForeColor = Color.Black;
+            btnSua.HoverOutline = Color.FromArgb(32, 128, 128, 128);
+            btnSua.Image = null;
+            btnSua.ImageAutoCenter = true;
+            btnSua.ImageExpand = new Point(0, 0);
+            btnSua.ImageOffset = new Point(0, 0);
+            btnSua.Location = new Point(884, 103);
+            btnSua.Name = "btnSua";
+            btnSua.NormalBackground = Color.FromArgb(0, 0, 192);
+            btnSua.NormalForeColor = Color.White;
+            btnSua.NormalImageTint = Color.White;
+            btnSua.NormalOutline = Color.FromArgb(64, 128, 128, 128);
+            btnSua.OutlineThickness = 1F;
+            btnSua.PressedBackground = Color.WhiteSmoke;
+            btnSua.PressedForeColor = Color.FromArgb(32, 32, 32);
+            btnSua.PressedImageTint = Color.White;
+            btnSua.PressedOutline = Color.FromArgb(64, 128, 128, 128);
+            btnSua.Rounding = new Padding(8);
+            btnSua.Size = new Size(79, 34);
+            btnSua.TabIndex = 17;
+            btnSua.TextAlignment = StringAlignment.Center;
+            btnSua.TextOffset = new Point(0, 0);
+            btnSua.Click += btnSua_Click;
+            // 
+            // btnXoa
+            // 
+            btnXoa.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnXoa.BackColor = Color.Transparent;
+            btnXoa.CheckButton = false;
+            btnXoa.Checked = false;
+            btnXoa.CheckedBackground = Color.FromArgb(255, 106, 0);
+            btnXoa.CheckedForeColor = Color.White;
+            btnXoa.CheckedImageTint = Color.White;
+            btnXoa.CheckedOutline = Color.FromArgb(255, 106, 0);
+            btnXoa.Content = "Xoá";
+            btnXoa.DialogResult = DialogResult.None;
+            btnXoa.Font = new Font("Microsoft Sans Serif", 9.75F);
+            btnXoa.ForeColor = Color.White;
+            btnXoa.HoverBackground = SystemColors.Window;
+            btnXoa.HoveredImageTint = Color.White;
+            btnXoa.HoverForeColor = Color.Black;
+            btnXoa.HoverOutline = Color.FromArgb(32, 128, 128, 128);
+            btnXoa.Image = null;
+            btnXoa.ImageAutoCenter = true;
+            btnXoa.ImageExpand = new Point(0, 0);
+            btnXoa.ImageOffset = new Point(0, 0);
+            btnXoa.Location = new Point(969, 103);
+            btnXoa.Name = "btnXoa";
+            btnXoa.NormalBackground = Color.Red;
+            btnXoa.NormalForeColor = Color.White;
+            btnXoa.NormalImageTint = Color.White;
+            btnXoa.NormalOutline = Color.FromArgb(64, 128, 128, 128);
+            btnXoa.OutlineThickness = 1F;
+            btnXoa.PressedBackground = Color.WhiteSmoke;
+            btnXoa.PressedForeColor = Color.FromArgb(32, 32, 32);
+            btnXoa.PressedImageTint = Color.White;
+            btnXoa.PressedOutline = Color.FromArgb(64, 128, 128, 128);
+            btnXoa.Rounding = new Padding(8);
+            btnXoa.Size = new Size(70, 34);
+            btnXoa.TabIndex = 18;
+            btnXoa.TextAlignment = StringAlignment.Center;
+            btnXoa.TextOffset = new Point(0, 0);
+            btnXoa.Click += btnXoa_Click;
+            // 
             // ProductControl
             // 
             AutoScaleMode = AutoScaleMode.Inherit;
             AutoSize = true;
             BackgroundImage = Properties.Resources.bg;
             BackgroundImageLayout = ImageLayout.Stretch;
+            Controls.Add(btnXoa);
+            Controls.Add(btnSua);
             Controls.Add(btnDownFileMau);
             Controls.Add(txtTimKiem);
             Controls.Add(cbxCategory);
@@ -248,7 +335,7 @@
             Controls.Add(label1);
             Controls.Add(dgvProducts);
             Name = "ProductControl";
-            Size = new Size(1003, 591);
+            Size = new Size(1056, 681);
             Load += ProductControl_Load;
             ((System.ComponentModel.ISupportInitialize)dgvProducts).EndInit();
             ResumeLayout(false);
@@ -262,5 +349,7 @@
         private ComboBox cbxCategory;
         private TextBox txtTimKiem;
         private CuoreUI.Controls.cuiButton btnDownFileMau;
+        private CuoreUI.Controls.cuiButton btnSua;
+        private CuoreUI.Controls.cuiButton btnXoa;
     }
 }

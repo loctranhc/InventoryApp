@@ -105,6 +105,7 @@
             btnPrescription.Name = "btnPrescription";
             btnPrescription.Size = new Size(75, 23);
             btnPrescription.TabIndex = 6;
+            btnPrescription.Visible = false;
             // 
             // btnInventory
             // 
@@ -140,6 +141,7 @@
             btnMedicine.Name = "btnMedicine";
             btnMedicine.Size = new Size(75, 23);
             btnMedicine.TabIndex = 10;
+            btnMedicine.Visible = false;
             // 
             // panelMain
             // 

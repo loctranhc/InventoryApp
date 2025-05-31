@@ -20,6 +20,8 @@ namespace InventoryApp
         private void InitializeComponent()
         {
             panelLeft = new Panel();
+            label2 = new Label();
+            cbxToaThuocMau = new ComboBox();
             cuiButton1 = new CuoreUI.Controls.cuiButton();
             txtGiamGia = new NumericUpDown();
             label5 = new Label();
@@ -43,10 +45,11 @@ namespace InventoryApp
             btnAddCart = new CuoreUI.Controls.cuiButton();
             btnSearch = new CuoreUI.Controls.cuiButton();
             pnlSanPhamChiTiet = new Panel();
-            lbDVT = new Label();
-            label2 = new Label();
+            label8 = new Label();
+            txtSoLuong = new TextBox();
+            label7 = new Label();
+            txtLieuDung = new TextBox();
             label1 = new Label();
-            lblDonViTinh = new Label();
             lblSoLuongTon = new Label();
             label3 = new Label();
             txtMoTa = new RichTextBox();
@@ -64,6 +67,8 @@ namespace InventoryApp
             // 
             panelLeft.BackColor = Color.Transparent;
             panelLeft.BackgroundImage = Properties.Resources.bg;
+            panelLeft.Controls.Add(label2);
+            panelLeft.Controls.Add(cbxToaThuocMau);
             panelLeft.Controls.Add(cuiButton1);
             panelLeft.Controls.Add(txtGiamGia);
             panelLeft.Controls.Add(label5);
@@ -82,6 +87,26 @@ namespace InventoryApp
             panelLeft.Name = "panelLeft";
             panelLeft.Size = new Size(600, 687);
             panelLeft.TabIndex = 1;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Location = new Point(11, 61);
+            label2.Name = "label2";
+            label2.Size = new Size(208, 20);
+            label2.TabIndex = 26;
+            label2.Text = "Chọn toa thuốc mẫu (nếu có)";
+            // 
+            // cbxToaThuocMau
+            // 
+            cbxToaThuocMau.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cbxToaThuocMau.FormattingEnabled = true;
+            cbxToaThuocMau.Location = new Point(225, 57);
+            cbxToaThuocMau.Name = "cbxToaThuocMau";
+            cbxToaThuocMau.Size = new Size(365, 29);
+            cbxToaThuocMau.TabIndex = 25;
+            cbxToaThuocMau.SelectedIndexChanged += cbxToaThuocMau_SelectedIndexChanged;
             // 
             // cuiButton1
             // 
@@ -256,10 +281,10 @@ namespace InventoryApp
             // dgvOrderList
             // 
             dgvOrderList.AllowUserToAddRows = false;
-            dgvOrderList.Location = new Point(10, 56);
+            dgvOrderList.Location = new Point(10, 98);
             dgvOrderList.Name = "dgvOrderList";
             dgvOrderList.ReadOnly = true;
-            dgvOrderList.Size = new Size(580, 270);
+            dgvOrderList.Size = new Size(580, 228);
             dgvOrderList.TabIndex = 1;
             dgvOrderList.CellClick += dgvOrderList_CellClick;
             dgvOrderList.CellContentClick += dgvOrderList_CellContentClick;
@@ -301,7 +326,7 @@ namespace InventoryApp
             // 
             lblValueMaKhach.AutoSize = true;
             lblValueMaKhach.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblValueMaKhach.Location = new Point(99, 397);
+            lblValueMaKhach.Location = new Point(99, 465);
             lblValueMaKhach.Name = "lblValueMaKhach";
             lblValueMaKhach.Size = new Size(28, 30);
             lblValueMaKhach.TabIndex = 20;
@@ -311,7 +336,7 @@ namespace InventoryApp
             // 
             lbnHienThiMaKhach.AutoSize = true;
             lbnHienThiMaKhach.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbnHienThiMaKhach.Location = new Point(16, 397);
+            lbnHienThiMaKhach.Location = new Point(16, 465);
             lbnHienThiMaKhach.Name = "lbnHienThiMaKhach";
             lbnHienThiMaKhach.Size = new Size(86, 30);
             lbnHienThiMaKhach.TabIndex = 19;
@@ -321,7 +346,7 @@ namespace InventoryApp
             // 
             lblHienThiTenKhach.AutoSize = true;
             lblHienThiTenKhach.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblHienThiTenKhach.Location = new Point(16, 433);
+            lblHienThiTenKhach.Location = new Point(16, 501);
             lblHienThiTenKhach.Name = "lblHienThiTenKhach";
             lblHienThiTenKhach.Size = new Size(277, 30);
             lblHienThiTenKhach.TabIndex = 18;
@@ -347,7 +372,7 @@ namespace InventoryApp
             btnThemKhachHang.ImageAutoCenter = true;
             btnThemKhachHang.ImageExpand = new Point(0, 0);
             btnThemKhachHang.ImageOffset = new Point(0, 0);
-            btnThemKhachHang.Location = new Point(16, 485);
+            btnThemKhachHang.Location = new Point(16, 553);
             btnThemKhachHang.Name = "btnThemKhachHang";
             btnThemKhachHang.NormalBackground = Color.OrangeRed;
             btnThemKhachHang.NormalForeColor = Color.White;
@@ -397,7 +422,7 @@ namespace InventoryApp
             btnThanhToan.ImageAutoCenter = true;
             btnThanhToan.ImageExpand = new Point(0, 0);
             btnThanhToan.ImageOffset = new Point(0, 0);
-            btnThanhToan.Location = new Point(176, 485);
+            btnThanhToan.Location = new Point(176, 553);
             btnThanhToan.Name = "btnThanhToan";
             btnThanhToan.NormalBackground = Color.DarkGreen;
             btnThanhToan.NormalForeColor = Color.White;
@@ -435,7 +460,7 @@ namespace InventoryApp
             btnAddCart.ImageAutoCenter = true;
             btnAddCart.ImageExpand = new Point(0, 0);
             btnAddCart.ImageOffset = new Point(0, 0);
-            btnAddCart.Location = new Point(273, 332);
+            btnAddCart.Location = new Point(205, 401);
             btnAddCart.Name = "btnAddCart";
             btnAddCart.NormalBackground = Color.OrangeRed;
             btnAddCart.NormalForeColor = Color.White;
@@ -447,7 +472,7 @@ namespace InventoryApp
             btnAddCart.PressedImageTint = Color.White;
             btnAddCart.PressedOutline = Color.FromArgb(64, 128, 128, 128);
             btnAddCart.Rounding = new Padding(8);
-            btnAddCart.Size = new Size(115, 50);
+            btnAddCart.Size = new Size(183, 50);
             btnAddCart.TabIndex = 11;
             btnAddCart.TextAlignment = StringAlignment.Center;
             btnAddCart.TextOffset = new Point(0, 0);
@@ -494,10 +519,11 @@ namespace InventoryApp
             // pnlSanPhamChiTiet
             // 
             pnlSanPhamChiTiet.BackColor = Color.Gainsboro;
-            pnlSanPhamChiTiet.Controls.Add(lbDVT);
-            pnlSanPhamChiTiet.Controls.Add(label2);
+            pnlSanPhamChiTiet.Controls.Add(label8);
+            pnlSanPhamChiTiet.Controls.Add(txtSoLuong);
+            pnlSanPhamChiTiet.Controls.Add(label7);
+            pnlSanPhamChiTiet.Controls.Add(txtLieuDung);
             pnlSanPhamChiTiet.Controls.Add(label1);
-            pnlSanPhamChiTiet.Controls.Add(lblDonViTinh);
             pnlSanPhamChiTiet.Controls.Add(lblSoLuongTon);
             pnlSanPhamChiTiet.Controls.Add(label3);
             pnlSanPhamChiTiet.Controls.Add(txtMoTa);
@@ -505,48 +531,54 @@ namespace InventoryApp
             pnlSanPhamChiTiet.Controls.Add(lblTenHang);
             pnlSanPhamChiTiet.Location = new Point(13, 65);
             pnlSanPhamChiTiet.Name = "pnlSanPhamChiTiet";
-            pnlSanPhamChiTiet.Size = new Size(375, 261);
+            pnlSanPhamChiTiet.Size = new Size(375, 330);
             pnlSanPhamChiTiet.TabIndex = 9;
             // 
-            // lbDVT
+            // label8
             // 
-            lbDVT.AutoSize = true;
-            lbDVT.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbDVT.Location = new Point(228, 219);
-            lbDVT.Name = "lbDVT";
-            lbDVT.Size = new Size(32, 21);
-            lbDVT.TabIndex = 8;
-            lbDVT.Text = "Cái";
+            label8.AutoSize = true;
+            label8.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            label8.Location = new Point(13, 186);
+            label8.Name = "label8";
+            label8.Size = new Size(83, 21);
+            label8.TabIndex = 12;
+            label8.Text = "Liều Dùng";
             // 
-            // label2
+            // txtSoLuong
             // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(135, 219);
-            label2.Name = "label2";
-            label2.Size = new Size(97, 21);
-            label2.TabIndex = 7;
-            label2.Text = "Đơn Vị Tính:";
+            txtSoLuong.Font = new Font("Segoe UI", 12F);
+            txtSoLuong.Location = new Point(13, 274);
+            txtSoLuong.Name = "txtSoLuong";
+            txtSoLuong.Size = new Size(348, 29);
+            txtSoLuong.TabIndex = 11;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            label7.Location = new Point(13, 249);
+            label7.Name = "label7";
+            label7.Size = new Size(80, 21);
+            label7.TabIndex = 10;
+            label7.Text = "Số Lượng";
+            // 
+            // txtLieuDung
+            // 
+            txtLieuDung.Font = new Font("Segoe UI", 12F);
+            txtLieuDung.Location = new Point(13, 209);
+            txtLieuDung.Name = "txtLieuDung";
+            txtLieuDung.Size = new Size(348, 29);
+            txtLieuDung.TabIndex = 9;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(163, 197);
+            label1.Location = new Point(192, 161);
             label1.Name = "label1";
             label1.Size = new Size(68, 21);
             label1.TabIndex = 6;
             label1.Text = "Giá Bán:";
-            // 
-            // lblDonViTinh
-            // 
-            lblDonViTinh.AutoSize = true;
-            lblDonViTinh.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblDonViTinh.Location = new Point(229, 219);
-            lblDonViTinh.Name = "lblDonViTinh";
-            lblDonViTinh.Size = new Size(0, 21);
-            lblDonViTinh.TabIndex = 5;
-            lblDonViTinh.Click += lblDonViTinh_Click;
             // 
             // lblSoLuongTon
             // 
@@ -572,7 +604,7 @@ namespace InventoryApp
             txtMoTa.Location = new Point(13, 72);
             txtMoTa.Name = "txtMoTa";
             txtMoTa.ReadOnly = true;
-            txtMoTa.Size = new Size(348, 109);
+            txtMoTa.Size = new Size(348, 86);
             txtMoTa.TabIndex = 2;
             txtMoTa.Text = "";
             // 
@@ -580,7 +612,7 @@ namespace InventoryApp
             // 
             lblGiaBan.AutoSize = true;
             lblGiaBan.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblGiaBan.Location = new Point(228, 197);
+            lblGiaBan.Location = new Point(257, 161);
             lblGiaBan.Name = "lblGiaBan";
             lblGiaBan.Size = new Size(19, 21);
             lblGiaBan.TabIndex = 1;
@@ -645,6 +677,6 @@ namespace InventoryApp
 
         }
 
-
+     
     }
 }

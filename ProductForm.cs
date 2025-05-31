@@ -17,6 +17,7 @@ namespace InventoryApp
     public partial class ProductForm : Form
     {
         private InventoryAppDbContext AppDbContext;
+        private readonly Product productModified;
 
         public ProductForm(InventoryAppDbContext inventoryAppDbContext)
         {
@@ -37,6 +38,36 @@ namespace InventoryApp
             foreach (var item in categories)
                 comboBox1.Items.Add(item);
             comboBox1.Text = "None";
+        }
+
+        public ProductForm(InventoryAppDbContext inventoryAppDbContext, Product editor)
+        {
+            InitializeComponent();
+            AppDbContext = inventoryAppDbContext;
+            productModified = editor;
+
+            if (AppDbContext.Categories.FirstOrDefault(x => x.TenNhapHang == "N/A") == null)
+            {
+                AppDbContext.Categories.Add(new MigrateDatabase.Models.Category
+                {
+                    MoTa = "Nhóm hàng mặc định",
+                    TenNhapHang = "N/A",
+                    TenNhomHang = "N/A"
+                });
+                AppDbContext.SaveChanges();
+            }
+            var categories = AppDbContext.Categories.Select(X => X.TenNhomHang).ToList<string>();
+            foreach (var item in categories)
+                comboBox1.Items.Add(item);
+            comboBox1.Text = "None";
+
+            txtTenHang.Text = editor.TenHang;
+            txtGiaNhap.Text = editor.GiaNhap.ToString();
+            txtDonViTinh.Text = editor.DonViTinh;
+            txtGiaBan.Text = editor.GiaBan.ToString();
+            txtSoLuongNhap.Text = editor.SoLuongTonKho.ToString();
+            txtGiaVon.Text = editor.GiaVon.ToString();
+            comboBox1.Text = inventoryAppDbContext.Categories.First(x => x.Id == editor.CategoryId).TenNhomHang;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -80,6 +111,56 @@ namespace InventoryApp
         {
             if (ValidateInputs())
             {
+                //Chỉnh sửa sản phẩm
+                if(productModified != null)
+                {
+                    var editableProduct = AppDbContext.Products.FirstOrDefault(x => x.Id == productModified.Id);
+                    var soLuongMoi = int.Parse(txtSoLuongNhap.Text.Trim());
+                    //Nhập hàng
+                    if (soLuongMoi > editableProduct.SoLuongTonKho)
+                    {
+                        NhapXuatHangHoa nhapHang = new NhapXuatHangHoa();
+                        nhapHang.SoLuongTonTruoc = editableProduct.SoLuongTonKho;
+                        nhapHang.SoLuongXuat = 0;
+                        nhapHang.SoLuongNhap = (soLuongMoi - editableProduct.SoLuongTonKho);
+                        nhapHang.MaHang = editableProduct.MaHang;
+                        nhapHang.TenHang = editableProduct.TenHang;
+                        nhapHang.CreatedTime = DateTime.Now;
+                        nhapHang.ProductId = editableProduct.Id;
+                        AppDbContext.NhapXuatHangHoas.Add(nhapHang);
+                        AppDbContext.SaveChanges();
+                    }
+
+                    //Xuất hàng
+                    if (soLuongMoi < editableProduct.SoLuongTonKho)
+                    {
+                        NhapXuatHangHoa nhapHang = new NhapXuatHangHoa();
+                        nhapHang.SoLuongTonTruoc = editableProduct.SoLuongTonKho;
+                        nhapHang.SoLuongXuat = (editableProduct.SoLuongTonKho - soLuongMoi);
+                        nhapHang.SoLuongNhap = 0;
+                        nhapHang.MaHang = editableProduct.MaHang;
+                        nhapHang.TenHang = editableProduct.TenHang;
+                        nhapHang.CreatedTime = DateTime.Now;
+                        nhapHang.ProductId = editableProduct.Id;
+                        AppDbContext.NhapXuatHangHoas.Add(nhapHang);
+                        AppDbContext.SaveChanges();
+                    }
+                    editableProduct.TenHang = txtTenHang.Text.Trim();
+                    editableProduct.DonViTinh = txtDonViTinh.Text.Trim();
+                    editableProduct.SoLuongTonKho = soLuongMoi;
+                    editableProduct.CategoryId = AppDbContext.Categories.FirstOrDefault(x => x.TenNhapHang.ToLower().Equals(comboBox1.Text.Trim().ToLower())).Id;
+                    editableProduct.GiaVon = decimal.Parse(txtGiaVon.Text.Trim());
+                    editableProduct.GiaNhap = decimal.Parse(txtGiaNhap.Text.Trim());
+                    editableProduct.GiaBan = decimal.Parse(txtGiaBan.Text.Trim());
+                    editableProduct.IsHidden = false;
+                    AppDbContext.SaveChanges();
+                    MessageBox.Show("Lưu sản phẩm thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                    return;
+                }
+
+                //Thêm mới
                 var product = new Product();
                 product.MaHang = GenerateMaHang(); // bạn có thể tạo mã sản phẩm theo kiểu SP00001...
                 product.TenHang = txtTenHang.Text.Trim();
@@ -89,6 +170,7 @@ namespace InventoryApp
                 product.GiaVon = decimal.Parse(txtGiaVon.Text.Trim());
                 product.GiaNhap = decimal.Parse(txtGiaNhap.Text.Trim());
                 product.GiaBan = decimal.Parse(txtGiaBan.Text.Trim());
+                product.IsHidden = false;
 
                 AppDbContext.Products.Add(product);
                 AppDbContext.SaveChanges();

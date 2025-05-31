@@ -59,7 +59,7 @@ namespace InventoryApp
             };
 
             string[] texts = {
-                "BÁN HÀNG", "BÁN THUỐC", "TOA THUỐC MẪU", "DANH MỤC", "QUẢN LÝ SẢN PHẨM", "QUẢN LÝ THUỐC", "HOÁ ĐƠN/TOA THUỐC",
+                "BÁN HÀNG", "BÁN THUỐC", "TOA THUỐC MẪU", "DANH MỤC", "QUẢN LÝ SẢN PHẨM/THUỐC", "QUẢN LÝ THUỐC", "HOÁ ĐƠN/TOA THUỐC",
                 "DS KHÁCH HÀNG", "DS NHÂN VIÊN", "THỐNG KÊ/BÁO CÁO"
             };
 

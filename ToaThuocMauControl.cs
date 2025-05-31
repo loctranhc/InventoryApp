@@ -19,8 +19,8 @@ namespace InventoryApp
 
         private void LoadAllDsToa()
         {
-            var prescriptions = dbContext.Prescriptions.Where(x => x.IsToaThuocMau == true);
-            LoadDanhSachToa(prescriptions.ToList());
+            var orders = dbContext.Orders.Where(x => x.IsHoaDonMau == true);
+            LoadDanhSachToa(orders.ToList());
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -30,20 +30,24 @@ namespace InventoryApp
             if (string.IsNullOrEmpty(queryText))
                 return;
 
-            var prescriptions = dbContext.Prescriptions.Where(x => x.TenDonThuoc.Contains(queryText) || x.MaDonThuoc.Contains(queryText) && x.IsToaThuocMau == true);
-            LoadDanhSachToa(prescriptions.ToList());
+            var orders = dbContext.Orders.Where(x => x.TenHoaDon.Contains(queryText) || x.OrderNo.Contains(queryText) && x.IsHoaDonMau == true);
+            LoadDanhSachToa(orders.ToList());
         }
 
-        private void LoadDanhSachToa(List<Prescription> prescriptions)
+        private void LoadDanhSachToa(List<Order> orders)
         {
             BindingSource bindingSource = new BindingSource();
-            bindingSource.DataSource = prescriptions;
+            bindingSource.DataSource = orders;
             dgvDonThuocMau.DataSource = bindingSource;
 
-            dgvDonThuocMau.Columns["Id"].Visible = false;
-            dgvDonThuocMau.Columns["IsToaThuocMau"].Visible = false;
-            dgvDonThuocMau.Columns["MaDonThuoc"].HeaderText = "Mã Đơn Thuốc";
-            dgvDonThuocMau.Columns["TenDonThuoc"].HeaderText = "Tên Đơn Thuốc";
+            dgvDonThuocMau.Columns["OrderId"].Visible = false;
+            dgvDonThuocMau.Columns["UserNo"].Visible = false;
+            dgvDonThuocMau.Columns["IsHoaDonMau"].Visible = false;
+            dgvDonThuocMau.Columns["PhanTramGiamGia"].Visible = false;
+            dgvDonThuocMau.Columns["MaNhanVien"].Visible = false;
+            dgvDonThuocMau.Columns["OrderNo"].HeaderText = "Mã Toa Thuốc";
+            dgvDonThuocMau.Columns["TenHoaDon"].HeaderText = "DS Mẫu Toa Thuốc";
+            dgvDonThuocMau.Columns["OrderDate"].HeaderText = "Ngày tạo";
 
             dgvDonThuocMau.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvDonThuocMau.AllowUserToAddRows = false;
@@ -70,18 +74,19 @@ namespace InventoryApp
             dgvDonThuocMau.BackgroundColor = Color.White;
         }
 
-        private void LoadChITiet(List<PrescriptionDetail> details)
+        private void LoadChiTiet(List<OrderDetail> details)
         {
             BindingSource bindingSource = new BindingSource();
             bindingSource.DataSource = details;
             dgvChiTiet.DataSource = bindingSource;
 
             dgvChiTiet.Columns["Id"].Visible = false;
-            dgvChiTiet.Columns["PrescriptionId"].Visible = false;
-            dgvChiTiet.Columns["MaKH"].Visible = false;
-            dgvChiTiet.Columns["MaNhanVien"].Visible = false;
-            dgvChiTiet.Columns["MaThuoc"].HeaderText = "Mã Thuốc";
-            dgvChiTiet.Columns["TenThuoc"].HeaderText = "Tên Thuốc";
+            dgvChiTiet.Columns["OrderId"].Visible = false;
+            dgvChiTiet.Columns["GiaBan"].Visible = false;
+            dgvChiTiet.Columns["CreatedTime"].Visible = false;
+            dgvChiTiet.Columns["MaHang"].HeaderText = "Mã Sản Phẩm";
+            dgvChiTiet.Columns["TenHang"].HeaderText = "Tên Sản Phẩm";
+            dgvChiTiet.Columns["SoLuong"].HeaderText = "Số Lượng";
             dgvChiTiet.Columns["LieuDung"].HeaderText = "Liều Dùng";
 
             dgvChiTiet.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -107,18 +112,6 @@ namespace InventoryApp
             dgvChiTiet.DefaultCellStyle.SelectionForeColor = Color.Black;
             dgvChiTiet.GridColor = Color.LightGray;
             dgvChiTiet.BackgroundColor = Color.White;
-
-            // Tạo mới cột button
-            DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
-            btnColumn.HeaderText = "Thao Tác";
-            btnColumn.Text = "Xoá";
-            btnColumn.Name = "btnXoa";
-            btnColumn.UseColumnTextForButtonValue = true;
-
-            if (!dgvChiTiet.Columns.Contains("btnXoa"))
-            {
-                dgvChiTiet.Columns.Add(btnColumn);
-            }
         }
 
         private void dgvDonThuocMau_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -131,10 +124,10 @@ namespace InventoryApp
             if (dgvDonThuocMau.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = dgvDonThuocMau.SelectedRows[0];
-                var maDonThuoc = selectedRow.Cells["MaDonThuoc"].Value?.ToString();
-                var idDonThuoc = dbContext.Prescriptions.FirstOrDefault(x => x.MaDonThuoc == maDonThuoc.Trim())?.Id;
-                var details = dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == idDonThuoc);
-                LoadChITiet(details.ToList());
+                var id = selectedRow.Cells["OrderId"].Value?.ToString();
+                int.TryParse(id, out int orderId);
+                var details = dbContext.OrderDetails.Where(x => x.OrderId == orderId);
+                LoadChiTiet(details.ToList());
             }
         }
 
@@ -165,9 +158,9 @@ namespace InventoryApp
             ThongTinDonThuocMau thongTinDonThuocMau = new ThongTinDonThuocMau(dbContext);
             if (thongTinDonThuocMau.ShowDialog() == DialogResult.OK)
             {
-                var toaThuoc = thongTinDonThuocMau.Tag as Prescription;
-                LoadDanhSachToa(new List<Prescription> { toaThuoc });
-                LoadChITiet(dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == toaThuoc.Id).ToList());
+                var toaThuoc = thongTinDonThuocMau.Tag as Order;
+                LoadDanhSachToa(new List<Order> { toaThuoc });
+                LoadChiTiet(dbContext.OrderDetails.Where(x => x.OrderId == toaThuoc.OrderId).ToList());
             }
         }
 
@@ -176,14 +169,23 @@ namespace InventoryApp
             if (dgvDonThuocMau.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = dgvDonThuocMau.SelectedRows[0];
-                var maDonThuoc = selectedRow.Cells["MaDonThuoc"].Value?.ToString();
-                var donThuoc = dbContext.Prescriptions.FirstOrDefault(x => x.MaDonThuoc == maDonThuoc.Trim());
-                ThongTinDonThuocMau thongTinDonThuocMau = new ThongTinDonThuocMau(dbContext, prescription: donThuoc);
+                var id = selectedRow.Cells["OrderId"].Value?.ToString();
+                int.TryParse(id, out int orderId);
+                var details = dbContext.OrderDetails.Where(x => x.OrderId == orderId);
+                LoadChiTiet(details.ToList());
+            }
+            if (dgvDonThuocMau.SelectedRows.Count > 0)
+            {
+                DataGridViewRow selectedRow = dgvDonThuocMau.SelectedRows[0];
+                var id = selectedRow.Cells["OrderId"].Value?.ToString();
+                int.TryParse(id, out int orderId);
+                var order = dbContext.Orders.FirstOrDefault(x => x.OrderId == orderId);
+                ThongTinDonThuocMau thongTinDonThuocMau = new ThongTinDonThuocMau(dbContext, order);
                 if (thongTinDonThuocMau.ShowDialog() == DialogResult.OK)
                 {
-                    var toaThuoc = thongTinDonThuocMau.Tag as Prescription;
-                    LoadDanhSachToa(new List<Prescription> { toaThuoc });
-                    LoadChITiet(dbContext.PrescriptionDetails.Where(x => x.PrescriptionId == toaThuoc.Id).ToList());
+                    var toaThuoc = thongTinDonThuocMau.Tag as Order;
+                    LoadDanhSachToa(new List<Order> { toaThuoc });
+                    LoadChiTiet(dbContext.OrderDetails.Where(x => x.OrderId == toaThuoc.OrderId).ToList());
                 }
             }
             else{
