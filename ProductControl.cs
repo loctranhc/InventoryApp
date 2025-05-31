@@ -156,6 +156,7 @@ namespace InventoryApp
                     });
 
                     MessageBox.Show("Nhập hàng thành công!");
+                    LoadSanPham(_dbContext.Products.ToList());
                 }
                 catch (Exception ex)
                 {

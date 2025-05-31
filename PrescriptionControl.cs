@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace InventoryApp
@@ -64,6 +65,16 @@ namespace InventoryApp
             dgvPrescriptionList.ReadOnly = true;
             dgvPrescriptionList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPrescriptionList.AutoGenerateColumns = true;
+            // Tạo mới cột button
+            DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
+            btnColumn.HeaderText = "Thao Tác";
+            btnColumn.Text = "Xoá";
+            btnColumn.Name = "btnXoa";
+            btnColumn.UseColumnTextForButtonValue = true;
+            if (!dgvPrescriptionList.Columns.Contains("btnXoa"))
+            {
+                dgvPrescriptionList.Columns.Add(btnColumn);
+            }
             dgvPrescriptionList.Refresh();
         }
 
@@ -406,6 +417,23 @@ namespace InventoryApp
                     txtSoLuong.Text = soLuong;
                     btnAddCart.Tag = thuoc;
                 }
+            }
+
+            if (e.RowIndex >= 0 && dgvPrescriptionList.Columns[e.ColumnIndex].Name == "btnXoa")
+            {
+                var row = dgvPrescriptionList.Rows[e.RowIndex];
+                var maThuoc = row.Cells["MaThuoc"].Value?.ToString();
+
+                var medicine = currentMedicine.FirstOrDefault(x => x.MaThuoc == maThuoc);
+                if (medicine is not null)
+                {
+                    currentMedicine.Remove(medicine);
+                    var prescription = currentPrescription.FirstOrDefault(x => x.MaThuoc == medicine.MaThuoc);
+                    if (prescription is not null)
+                        currentPrescription.Remove(prescription);
+                }
+
+                InitPrescriptionTable(currentPrescription);
             }
         }
 
